@@ -1,3 +1,4 @@
+import os
 import time
 import imutils
 import cv2
@@ -10,112 +11,127 @@ from math import ceil
 username = "demo"
 password = "password"
 
-scrollRatio = 0.7
+scrollRatio = 0.6
 
+# https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
 def getPageScreenshot(url, image_name="screenshot"):
     viewportWidth = 1280
     viewportHeight = 800
     timer_sleep = 2
     scrollHeight = viewportHeight * scrollRatio
+    # setup some options
     cOptions = webdriver.chrome.options.Options()
     cOptions.add_argument("--disable-infobars")
     browser = webdriver.Chrome(chrome_options=cOptions)
     browser.set_window_size(viewportWidth, viewportHeight)
+    actual_height = browser.execute_script('return window.innerHeight')
+    height_diff = viewportHeight - actual_height
+    if height_diff > 0:
+        browser.set_window_size(viewportWidth, viewportHeight + height_diff)
     browser.get(url)
 
 
     # pause all of the videos
     browser.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
 
-    # get the pageheight
-    body = browser.find_element_by_css_selector('body')
-    pageHeight = float(body.size['height'])
-
-    # init some variable for the loop
-    progress = 0;
-    i = 1
-    while ((progress + viewportHeight) < pageHeight):
-        image_path = '%s_%s.png' % (image_name, i)
-        time.sleep(timer_sleep)
-        print "Making image %s" % image_path
-        screenshot = browser.save_screenshot(image_path)
-        print progress
-        i = i + 1
-        progress = progress + scrollHeight
-        browser.execute_script("window.scrollTo(0, %s)" % (progress))
-
-    browser.quit();
+    fullpageScreenshot(browser, '%s_web_fullpage.png' % image_name)
 
 
-def getCutImage(image1, image2):
-    gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
-    gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+    browser.quit()
 
-    h, w = gray1.shape
-    h2, w2 = gray2.shape
-    height_bounds = min(h, h2)
-
-    scroll_offset = int(h * (1 - scrollRatio))
-    curr_overlap = scroll_offset
-
-    while curr_overlap > 0:
-
-        first_image_offset = 0
-        print 'Current Overlap: %s' % curr_overlap
-        while first_image_offset < curr_overlap:
-            cropped_image = gray1[h - (curr_overlap + first_image_offset):h - first_image_offset, 0:w]
-            cropped_next_image = gray2[0:curr_overlap, 0:w2]
-            print 'First Image Offset: %s' % first_image_offset
-
-            try:
-                (score, diff) = compare_ssim(cropped_image, cropped_next_image, full=True)
-                print score
-            except ValueError as val_error:
-                print 'Current Overlap: %s' % curr_overlap
-                print 'First Image Offset: %s' % first_image_offset
-                print val_error
-                exit()
-            if score == 1:
-                print "found a match with {}% accuracy".format(score * 100)
-                cut_image = image1[0:h - (curr_overlap + first_image_offset), 0:w]
-                break
-            first_image_offset = first_image_offset + 1
-        curr_overlap = curr_overlap - 1
-
-    return cut_image
-
-def mergeImages(image_name = "screenshot", viewportHeight = 800):
-    images = []
-    idx = 1
-    image = True
-    next_image = True
-    while next_image is not None:
-        image = cv2.imread('%s_%s.png' % (image_name, idx))
-        next_image = cv2.imread('%s_%s.png' % (image_name, idx + 1))
-        if idx > 1:
-            h, w, scale = image.shape
-            image = image[10:h]
-        if next_image is None:
-            break
-
-        cut_image = getCutImage(image, next_image)
-        print 'Adding image to the list'
-        images.append(cut_image)
-        idx = idx + 1
-
-    images.append(image)
-
-    squashed_img = numpy.concatenate(images, axis=0)
-    cv2.imwrite('squashed_%s.png' % image_name, squashed_img)
+    return
 
 
+# Heavily Inspired by:
+# https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
+def fullpageScreenshot(driver, file):
+    print 'Staring full page screenshot'
+
+    total_width = driver.execute_script('return document.body.offsetWidth')
+    total_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+    viewport_width = driver.execute_script('return document.body.clientWidth')
+    viewport_height = driver.execute_script('return window.innerHeight')
+    devicePixelRatio = driver.execute_script('return window.devicePixelRatio')
+
+    print 'Total Dimensions: {0}, {1}; Viewport: {2}, {3}'.format(total_width, total_height, viewport_width, viewport_height)
+    rectangles = []
+
+    i = 0
+    while i < total_height:
+        ii = 0
+        top_height = i + viewport_height
+
+        if top_height > total_height:
+            top_height = total_height
+
+        while ii < total_width:
+            top_width = ii + viewport_width
+
+            if top_width > total_width:
+                top_width = total_width
+
+            print 'Appending Rectangle {0}, {1}, {2}, {3}'.format(ii, i, top_width, top_height)
+            rectangles.append((ii, i, top_width, top_height))
+
+            ii = ii + viewport_width
+
+        i = i + viewport_height
+
+    stiched_image = Image.new('RGB', (total_width * devicePixelRatio , total_height * devicePixelRatio ))
+    previous = None
+    part = 0
+
+    for rectangle in rectangles:
+        if not previous is None:
+            driver.execute_script('window.scrollTo({0}, {1})'.format(rectangle[0], rectangle[1]))
+            driver.execute_script("document.querySelectorAll('header').forEach(function(el) {el.style.display = 'none'})");
+            print 'Scrolled To {0}, {1}'.format(rectangle[0], rectangle[1])
+            time.sleep(0.7)
+
+        file_name = '{}_part_{}.png'.format(file, part)
+        print 'Capturing {0} ...'.format(file_name)
+
+        driver.get_screenshot_as_file(file_name)
+        screenshot = Image.open(file_name)
+
+        if rectangle[1] + viewport_height > total_height:
+            offset = (rectangle[0], total_height - viewport_height)
+        else:
+            offset = (rectangle[0], rectangle[1])
+
+        offset = (offset[0] * devicePixelRatio, offset[1] * devicePixelRatio)
+        print 'Adding to stiched image with offset: {0}, {1}'.format(offset[0], offset[1])
+        stiched_image.paste(screenshot, offset)
+
+        del screenshot
+        os.remove(file_name)
+        part = part + 1
+        previous = rectangle
+
+    stiched_image.resize((total_width, total_height))
+    stiched_image.save(file)
+    print 'Finished Chrome fullpage screenshot'
+    return True
+
+
+
+
+# http://docs.opencv.org/trunk/d7/d4d/tutorial_py_thresholding.html
 # Found this on http://www.pyimagesearch.com/2017/06/19/image-difference-with-opencv-and-python/
-def compareImages(image1Path, image2Path):
+def compareImages(image1Path, image2Path, image_name = 'diff_img'):
     # grayscale images
     image1 = cv2.imread(image1Path)
     image2 = cv2.imread(image2Path)
     gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
+
+    h1, w1 = gray1.shape
+    h2, w2 = gray2.shape
+
+    minimum_height = min(h1, h2)
+
+    gray1 = gray1[0:minimum_height]
+    gray2 = gray2[0:minimum_height]
 
     # Compute the Structural Similarity Index (SSIM)
     (score, diff) = compare_ssim(gray1, gray2, full=True)
@@ -123,11 +139,9 @@ def compareImages(image1Path, image2Path):
     print "SSIM: %s" % score
 
     # Find the threshold, and contours
-    if imutils.is_cv2():
-        print 'This is using opencv2.x'
     thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    contours = contours[0] if imutils.is_cv2() else contours[1]
+    contours = contours[0]
 
 
     # Loop over the contours and draw bounding rectangles
@@ -139,12 +153,13 @@ def compareImages(image1Path, image2Path):
     # cv2.imshow("Modified", image2)
     # cv2.imshow("Diff", diff)
     # cv2.imshow("Thresh", thresh)
-    cv2.imwrite('diff_img.png', image2)
+    cv2.imwrite('%s.png' % image_name, image2)
 
 
 
-# getPageScreenshot('https://demo:password@agileone.staging.wpengine.com', "staging")
 # getPageScreenshot('https://demo:password@agileone.wpengine.com', "production")
-#getPageScreenshot('http://agileone.localhost.com', "localhost")
-mergeImages('localhost')
-# compareImages("staging_6.png", "localhost_6.png")
+# getPageScreenshot('https://demo:password@agileone.staging.wpengine.com', "staging")
+getPageScreenshot('http://agileone.localhost.com', "localhost")
+# compareImages("agileone_invision.png", "staging_web_fullpage.png", 'staging_diff')
+compareImages("agileone_invision.png", "localhost_web_fullpage.png", 'localhost_diff')
+compareImages("localhost_web_fullpage.png", "agileone_invision.png", 'agileone_diff')

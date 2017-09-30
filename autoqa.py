@@ -3,41 +3,48 @@ import time
 import imutils
 import cv2
 import numpy
+import argparse
 from PIL import Image
 from skimage.measure import compare_ssim
 from selenium import webdriver
 from math import ceil
 
-username = "demo"
-password = "password"
 
 scrollRatio = 0.6
 
+
 # https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
-def getPageScreenshot(url, image_name="screenshot"):
+def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
     viewportWidth = 1280
     viewportHeight = 800
-    timer_sleep = 2
-    scrollHeight = viewportHeight * scrollRatio
     # setup some options
-    cOptions = webdriver.chrome.options.Options()
-    cOptions.add_argument("--disable-infobars")
-    browser = webdriver.Chrome(chrome_options=cOptions)
-    browser.set_window_size(viewportWidth, viewportHeight)
-    actual_height = browser.execute_script('return window.innerHeight')
+    if( driver == 'chrome' ):
+        cOptions = webdriver.chrome.options.Options()
+        cOptions.add_argument("--disable-infobars")
+        webDriver = webdriver.Chrome(chrome_options=cOptions)
+    elif( driver == 'firefox' ):
+        FirefoxProfile fp = new FirefoxProfile()
+        capabilities = DesiredCapabilities.firefox()
+        capabilities.setCapability(FirefoxDriver.PROFILE, fp)
+
+
+        display = Display(visible=0, size=(1920, 1080)).start()
+        webDriver = webdriver.Firefox()
+    webDriver.set_window_size(viewportWidth, viewportHeight)
+    actual_height = webDriver.execute_script('return window.innerHeight')
     height_diff = viewportHeight - actual_height
     if height_diff > 0:
-        browser.set_window_size(viewportWidth, viewportHeight + height_diff)
-    browser.get(url)
+        webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
+    webDriver.get(url)
 
 
     # pause all of the videos
-    browser.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
+    webDriver.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
 
-    fullpageScreenshot(browser, '%s_web_fullpage.png' % image_name)
+    fullpageScreenshot(webDriver, '{}_{}_web_fullpage.png'.format(image_name, driver))
 
 
-    browser.quit()
+    webDriver.quit()
 
     return
 
@@ -118,7 +125,7 @@ def fullpageScreenshot(driver, file):
 
 # http://docs.opencv.org/trunk/d7/d4d/tutorial_py_thresholding.html
 # Found this on http://www.pyimagesearch.com/2017/06/19/image-difference-with-opencv-and-python/
-def compareImages(image1Path, image2Path, image_name = 'diff_img'):
+def compareImages(image1Path, image2Path, image_name = 'diff_img', area_threshold = 10):
     # grayscale images
     image1 = cv2.imread(image1Path)
     image2 = cv2.imread(image2Path)
@@ -147,7 +154,8 @@ def compareImages(image1Path, image2Path, image_name = 'diff_img'):
     # Loop over the contours and draw bounding rectangles
     for cont in contours:
         (x, y, w, h) = cv2.boundingRect(cont)
-        cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        if w * h < area_threshold:
+            cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
     # cv2.imshow("Original", image1)
     # cv2.imshow("Modified", image2)
@@ -159,7 +167,7 @@ def compareImages(image1Path, image2Path, image_name = 'diff_img'):
 
 # getPageScreenshot('https://demo:password@agileone.wpengine.com', "production")
 # getPageScreenshot('https://demo:password@agileone.staging.wpengine.com', "staging")
-getPageScreenshot('http://agileone.localhost.com', "localhost")
+getPageScreenshot('http://chrisgreco.staging.wpengine.com/', "staging", "firefox")
 # compareImages("agileone_invision.png", "staging_web_fullpage.png", 'staging_diff')
 compareImages("agileone_invision.png", "localhost_web_fullpage.png", 'localhost_diff')
 compareImages("localhost_web_fullpage.png", "agileone_invision.png", 'agileone_diff')

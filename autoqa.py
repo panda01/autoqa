@@ -23,7 +23,7 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
         cOptions.add_argument("--disable-infobars")
         webDriver = webdriver.Chrome(chrome_options=cOptions)
     elif( driver == 'firefox' ):
-        FirefoxProfile fp = new FirefoxProfile()
+        fp = FirefoxProfile()
         capabilities = DesiredCapabilities.firefox()
         capabilities.setCapability(FirefoxDriver.PROFILE, fp)
 
@@ -148,26 +148,28 @@ def compareImages(image1Path, image2Path, image_name = 'diff_img', area_threshol
     # Find the threshold, and contours
     thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    contours = contours[0]
+    contours = contours[0] if imutils.is_cv2() else contours[1]
 
 
     # Loop over the contours and draw bounding rectangles
     for cont in contours:
         (x, y, w, h) = cv2.boundingRect(cont)
-        if w * h < area_threshold:
-            cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+        # print 'Contour: {}'.format(cont)
+        # print 'Drawing at: {},{} Rectangle: {}x{}'.format(x, y, w, h)
+        cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 1)
 
-    # cv2.imshow("Original", image1)
-    # cv2.imshow("Modified", image2)
-    # cv2.imshow("Diff", diff)
-    # cv2.imshow("Thresh", thresh)
+    # cv2.imwrite("original.png", image1)
+    # cv2.imwrite("modified.png", image2)
+    cv2.imwrite("diff.png", diff)
+    cv2.imwrite("thresh.png", thresh)
     cv2.imwrite('%s.png' % image_name, image2)
+    print 'Made image %s.png' % image_name
 
 
 
 # getPageScreenshot('https://demo:password@agileone.wpengine.com', "production")
 # getPageScreenshot('https://demo:password@agileone.staging.wpengine.com', "staging")
-getPageScreenshot('http://chrisgreco.staging.wpengine.com/', "staging", "firefox")
+# getPageScreenshot('http://agileone.localhost.com', "localhost")
 # compareImages("agileone_invision.png", "staging_web_fullpage.png", 'staging_diff')
-compareImages("agileone_invision.png", "localhost_web_fullpage.png", 'localhost_diff')
-compareImages("localhost_web_fullpage.png", "agileone_invision.png", 'agileone_diff')
+compareImages("agileone_invision.png", "localhost_chrome_web_fullpage.png", 'localhost_diff')
+compareImages("localhost_chrome_web_fullpage.png", "agileone_invision.png", 'agileone_diff')

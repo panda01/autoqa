@@ -12,13 +12,12 @@ import datetime
 
 cgitb.enable(display=1)
 
-
 # HTML page
 print "Content-type: text/html\n\n"
 
 #init some vars
 form = cgi.FieldStorage()
-db = MySQLdb.connect(host="127.0.0.1", port=8889, user="root", passwd="root", db="autoqa_db_v1")
+db = MySQLdb.connect(host="127.0.0.1", port=3306, user="root", passwd="root", db="autoqa_db_v1")
 cursor = db.cursor()
 now = datetime.datetime.now()
 

@@ -11,16 +11,21 @@ from PIL import Image
 from skimage.measure import compare_ssim
 from selenium import webdriver
 from math import ceil
+from pyvirtualdisplay import Display
+
+
 
 # https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
 def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
     viewportWidth = 1280
     viewportHeight = 800
+    display = Display(visible=0, size=(viewportWidth, viewportHeight))
+    display.start()
     # setup some options
     if( driver == 'chrome' ):
         cOptions = webdriver.chrome.options.Options()
         cOptions.add_argument("--disable-infobars")
-        webDriver = webdriver.Chrome("/usr/local/bin/chromedriver", chrome_options=cOptions)
+        webDriver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
     elif( driver == 'firefox' ):
         fp = FirefoxProfile()
         capabilities = DesiredCapabilities.firefox()
@@ -29,32 +34,30 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
 
         display = Display(visible=0, size=(1920, 1080)).start()
         webDriver = webdriver.Firefox()
-    webDriver.set_window_size(viewportWidth, viewportHeight)
+    # webDriver.set_window_size(viewportWidth, viewportHeight)
     actual_height = webDriver.execute_script('return window.innerHeight')
     height_diff = viewportHeight - actual_height
-    if height_diff > 0:
-        webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
+    # if height_diff > 0:
+        # webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
     webDriver.get(url)
 
 
     # pause all of the videos
     webDriver.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
 
-    filename = '../screenshots/{}_{}_web_fullpage.png'.format(image_name, driver)
-
-    new_filename = fullpageScreenshot(webDriver, filename)
+    screenshot_image = fullpageScreenshot(webDriver, image_name)
 
     webDriver.quit()
 
-    if new_filename:
-        return filename
+    if screenshot_image:
+        return screenshot_image
     else:
         return False
 
 
 # Heavily Inspired by:
 # https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
-def fullpageScreenshot(driver, file):
+def fullpageScreenshot(driver, file = "temp_image"):
 
     total_width = driver.execute_script('return document.body.offsetWidth')
     total_height = driver.execute_script('return document.body.parentNode.scrollHeight')
@@ -118,8 +121,7 @@ def fullpageScreenshot(driver, file):
         previous = rectangle
 
     stiched_image.resize((total_width, total_height))
-    stiched_image.save(file)
-    return True
+    return stiched_image
 
 
 
@@ -128,8 +130,8 @@ def fullpageScreenshot(driver, file):
 # Found this on http://www.pyimagesearch.com/2017/06/19/image-difference-with-opencv-and-python/
 def compareImages(image1Path, image2Path, image_name = 'diff_img', area_threshold = 10):
     # grayscale images
-    image1 = cv2.imread(image1Path)
-    image2 = cv2.imread(image2Path)
+    image1 = cv2.imread(os.path.abspath(image1Path), 1)
+    image2 = cv2.imread(os.path.abspath(image2Path), 1)
     gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
 
@@ -157,13 +159,4 @@ def compareImages(image1Path, image2Path, image_name = 'diff_img', area_threshol
         if w * h > area_threshold * area_threshold:
             cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-    # cv2.imwrite("original.png", image1)
-    # cv2.imwrite("modified.png", image2)
-    threshold_img_path = "../comparisons/%s_thresh.png" % image_name
-    diff_img_path = "../comparisons/%s_diff.png" % image_name
-    contours_img_path = "../comparisons/%s_contours.png" % image_name
-    cv2.imwrite(threshold_img_path, thresh)
-    cv2.imwrite(diff_img_path, diff)
-    cv2.imwrite(contours_img_path, image2)
-
-    return (threshold_img_path, diff_img_path, contours_img_path)
+    return (thresh, diff, image2)

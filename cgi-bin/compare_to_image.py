@@ -59,7 +59,7 @@ if form.has_key('website_address'):
 
 
 if uploaded_file_path and screenshot_filepath:
-    (diff_img, threshold_img, contours_img) = autoqa.compareImages(uploaded_file_path, screenshot_filepath, file_prefix)
+    (diff_img, threshold_img, contours_img) = autoqa.compareImages(uploaded_file_path, screenshot_filepath)
     comparison_image_prefix = os.path.abspath(os.path.join('../comparisons/'))
 
     cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'diff_img.png', diff_img)

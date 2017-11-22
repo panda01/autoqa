@@ -3,14 +3,16 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Auto QA for you</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="script.js"></script>
 	</head>
 	<body>
-		<form action="/cgi-bin/compare_to_image.py" method="POST" enctype="multipart/form-data">
+		<form id="main_form" action="/cgi-bin/compare_to_image.py" method="POST" enctype="multipart/form-data">
 			Comparison Image:
-			<input type="file" name="comparison_image" />
+			<input type="file" name="comparison_image" id="comparison_image" />
 			<br />
 			Website Address:
-			<input type="text" name="website_address" />
+			<input type="text" name="website_address" id="website_address" />
 			<br />
 			<input type="submit" value="Check For Differences" />
 		</form>

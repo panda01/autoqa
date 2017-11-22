@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Auto QA for you</title>
+	</head>
+	<body>
+		<form action="/cgi-bin/compare_to_image.py" method="POST" enctype="multipart/form-data">
+			Comparison Image:
+			<input type="file" name="comparison_image" />
+			<br />
+			Website Address:
+			<input type="text" name="website_address" />
+			<br />
+			<input type="submit" value="Check For Differences" />
+		</form>
+	</body>
+</html>

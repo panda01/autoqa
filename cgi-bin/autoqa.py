@@ -65,7 +65,6 @@ def fullpageScreenshot(driver, file = "temp_image"):
     viewport_height = driver.execute_script('return window.innerHeight')
     devicePixelRatio = driver.execute_script('return window.devicePixelRatio')
 
-    # print 'Total Dimensions: {0}, {1}; Viewport: {2}, {3}'.format(total_width, total_height, viewport_width, viewport_height)
     rectangles = []
 
     i = 0
@@ -82,7 +81,6 @@ def fullpageScreenshot(driver, file = "temp_image"):
             if top_width > total_width:
                 top_width = total_width
 
-            # print 'Appending Rectangle {0}, {1}, {2}, {3}'.format(ii, i, top_width, top_height)
             rectangles.append((ii, i, top_width, top_height))
 
             ii = ii + viewport_width
@@ -97,11 +95,9 @@ def fullpageScreenshot(driver, file = "temp_image"):
         if not previous is None:
             driver.execute_script('window.scrollTo({0}, {1})'.format(rectangle[0], rectangle[1]))
             driver.execute_script("document.querySelectorAll('header').forEach(function(el) {el.style.display = 'none'})");
-            # print 'Scrolled To {0}, {1}'.format(rectangle[0], rectangle[1])
             time.sleep(0.7)
 
         file_name = '{}_part_{}.png'.format(file, part)
-        # print 'Capturing {0} ...'.format(file_name)
 
         driver.get_screenshot_as_file(file_name)
         screenshot = Image.open(file_name)
@@ -112,7 +108,6 @@ def fullpageScreenshot(driver, file = "temp_image"):
             offset = (rectangle[0], rectangle[1])
 
         offset = (offset[0] * devicePixelRatio, offset[1] * devicePixelRatio)
-        # print 'Adding to stiched image with offset: {0}, {1}'.format(offset[0], offset[1])
         stiched_image.paste(screenshot, offset)
 
         del screenshot

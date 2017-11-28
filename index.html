@@ -3,18 +3,41 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Auto QA for you</title>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="script.js"></script>
+		<link rel="stylesheet" href="/public/style.css">
 	</head>
 	<body>
-		<form id="main_form" action="/cgi-bin/compare_to_image.py" method="POST" enctype="multipart/form-data">
-			Comparison Image:
-			<input type="file" name="comparison_image" id="comparison_image" />
-			<br />
-			Website Address:
-			<input type="text" name="website_address" id="website_address" />
-			<br />
-			<input type="submit" value="Check For Differences" />
+		<form class="container-fluid" data-step="0">
+			<div class="row justify-content-center align-items-center">
+				<div class="form-group col-lg-8">
+					<label for="website_address"><h3>Enter an URL:</h3></label>
+					<input type="text" class="form-control" name="website_address" id="website_address" />
+					<button class="btn btn-primary" data-step-action="next">
+						Next
+					</button>
+				</div>
+			</div>
 		</form>
+		<form class="container-fluid" data-step="1">
+			<div class="row justify-content-center align-items-center">
+				<div class="form-group col-lg-8">
+					<label for="comparison_image"><h3>Choose An Image to compare</h3></label>
+					<input type="file" class="form-control" name="comparison_image" id="comparison_image" />
+					<button class="btn btn-primary" data-step-action="prev">
+						Back
+					</button>
+					<button class="btn btn-primary" data-step-action="next">
+						Check For Differences
+					</button>
+				</div>
+			</div>
+		</form>
+		<div id="comparison_page" class="container-fluid" data-step="2">
+			<div class="img_wrap">
+				<img id="img_1" class="img" />
+				<img id="img_2" class="img" />
+			</div>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="/public/script.js"></script>
 	</body>
 </html>

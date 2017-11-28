@@ -9,11 +9,15 @@ import os
 import cv2
 import MySQLdb
 import datetime
+from json import JSONEncoder
 
 cgitb.enable(display=1)
 
 # HTML page
-print "Content-type: text/html\n\n"
+print "Content-type: application/json\n\n"
+
+
+json_return_obj = {};
 
 #init some vars
 form = cgi.FieldStorage()
@@ -37,13 +41,22 @@ if form.has_key('comparison_image'):
                 if not chunk: break;
                 write_stream.write(chunk)
             write_stream.close()
-            print 'Uploaded file to %s <br />' % uploaded_file_path
+            json_return_obj['uploaded_file'] = {
+                'status': 'Success',
+                'text': uploaded_file_path
+            }
         except:
             uploaded_file_path = None
-            print 'Couldn\'t write to server <br />'
+            json_return_obj['uploaded_file'] = {
+                'status': 'Error',
+                'text': 'Couldn\'t write to server'
+            }
 
 else:
-        print 'No file to Upload <br />'
+        json_return_obj['uploaded_file'] = {
+            'status': 'Error',
+            'text': 'No File to upload'
+        }
 
 
 if form.has_key('website_address'):
@@ -55,16 +68,23 @@ if form.has_key('website_address'):
     screenshot_filepath = os.path.join('../uploads/', safe_url + '.png')
 
     screenshot_img.save(screenshot_filepath)
+    json_return_obj['url'] = {
+        'status': 'Success',
+        'text': screenshot_filepath
+    }
 
 
 
 if uploaded_file_path and screenshot_filepath:
     (diff_img, threshold_img, contours_img) = autoqa.compareImages(uploaded_file_path, screenshot_filepath)
-    comparison_image_prefix = os.path.abspath(os.path.join('../comparisons/'))
+    comparison_image_prefix = os.path.relpath(os.path.join('../comparisons/'))
 
     cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'diff_img.png', diff_img)
     cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'threshold_img.png', threshold_img)
     cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'contours_img.png', contours_img)
+    json_return_obj['comparisons'] = {
+        'prefix': comparison_image_prefix + '/' + file_date_prefix,
+        'suffixes': ['diff_img.png', 'threshold_img.png', 'contours_img.png']
+    }
 
-print 'End.'
-
+print JSONEncoder().encode(json_return_obj)

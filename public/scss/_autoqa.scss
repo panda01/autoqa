@@ -1,0 +1,43 @@
+
+
+@mixin full_page {
+	position: fixed;
+	top: 0;
+	left: 100vw;
+	right: -100vw;
+	bottom: 0;
+	display: none;
+	transition: left 1000ms, right 1000ms;
+	&.prev {
+		left: -100vw;
+		right: 100vw;
+	}
+	&.next {
+		left: 100vw;
+		right: -100vw;
+	}
+	&.current {
+		display: flex;
+		left: 0;
+		right: 0;
+		.row {
+			width: 100%;
+		}
+	}
+	.btn {
+		margin-top: 20px;
+	}
+}
+form.container-fluid {
+	display: none;
+	@include full_page();
+	.row {
+		height: 100%;
+	}
+}
+
+
+#comparison_page {
+	@include full_page();
+	display: none;
+}

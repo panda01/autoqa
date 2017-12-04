@@ -1,5 +1,5 @@
 (function($) {
-	function makeCompareRequest() {
+	function makeCompareRequest(successFn) {
 		var files_list = $('#comparison_image')[0].files;
 		var form_data = new FormData();
 		$.each(files_list, function(key, val) {
@@ -22,10 +22,57 @@
 			}
 		});
 	}
-	function attachFormEvents() {
-		// Ajax submit the form so the user gets some feedback
-		// $('#main_form').on('submit', makeCompareRequest);
+	function trim(str) {
+		while(str[0] === ' ') {
+			str = str.substring(1);
+		}
+		while(str[str.length - 1] === ' ') {
+			str = str.substring(0, str.length - 1);
+		}
+		return str;
 	}
+
+	var validation = [
+		function(el) {
+			var $inputEl = $('#website_address');
+			var rawInputVal = $inputEl.val();
+			var saferInput = trim(rawInputVal);
+			if (saferInput.length === 0) {
+				$inputEl
+					.attr('data-error-msg', 'Url cannot be epmty')
+					.addClass('has_error');
+				return false;
+			}
+			// Up to 3 subdomain url regex
+			var urlRegex = /^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+[a-z0-9]+\.[a-z]+[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/;
+			var isUrl = urlRegex.test(saferInput);
+			if (!isUrl) {
+				$inputEl
+					.attr('data-error-msg', 'Not a valid URL')
+					.addClass('has_error');
+				return false;
+			}
+
+			return true;
+		},
+		function(el) {
+			return true;
+		}
+	];
+	var onEnterStep = [
+		function(nextFn) {
+			setTimeout(function() {
+				var $urlInput = $('#website_address');
+				$urlInput.focus();
+			}, 1);
+		},
+		function(nextFn) {
+		},
+		function(nextFn) {
+			makeCompareRequest();
+		}
+	];
+
 	function manageSteps(finishFn) {
 		var currStep = -1;
 		var $steps = $('[data-step]');
@@ -37,24 +84,30 @@
 			if(action === 'prev') {
 				prev();
 			} else {
-				next();
+				if(validation[currStep]()) {
+					next();
+				} else {
+				}
 			}
 		});
-		$steps.on('keydown', 'input[type="text"]', function(evt) {
-			if(evt.keyCode === 13) {
-				next();
-				evt.preventDefault();
+		$steps.on('keydown', 'input', function(evt) {
+			var keyCode = evt.keyCode;
+			if(keyCode !== 13) {
+				var $inputEl = $(evt.currentTarget);
+				$inputEl.removeClass('has_error');
 			}
 		});
 
 		function next() {
-			$steps.removeClass('current')
+			$steps.removeClass('current');
 			currStep++;
 			if(currStep >= $steps.length) {
 				currStep = $steps.length - 1;
-				finishFn();
-				return;
+				currStep = 0;
 			}
+
+			// Fire Enter Function
+			onEnterStep[currStep]();
 			var $curr = $($steps[currStep]);
 			$curr.addClass('current');
 			$curr.nextAll().addClass('next');
@@ -78,8 +131,8 @@
 	$(document).ready(function() {
 		var doAjaxForm = location.href.indexOf('noajax') === -1;
 		if(doAjaxForm) {
-			attachFormEvents();
+			// attachFormEvents();
 		}
-		manageSteps(makeCompareRequest);
+		manageSteps();
 	});
 }(jQuery));

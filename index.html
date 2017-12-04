@@ -11,7 +11,7 @@
 				<div class="form-group col-lg-8">
 					<label for="website_address"><h3>Enter an URL:</h3></label>
 					<input type="text" class="form-control" name="website_address" id="website_address" />
-					<button class="btn btn-primary" data-step-action="next">
+					<button type="submit" class="btn btn-primary" data-step-action="next">
 						Next
 					</button>
 				</div>
@@ -20,24 +20,29 @@
 		<form class="container-fluid" data-step="1">
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
-					<label for="comparison_image"><h3>Choose An Image to compare</h3></label>
+					<label for="comparison_image"><h3>Choose an Image to compare</h3></label>
 					<input type="file" class="form-control" name="comparison_image" id="comparison_image" />
 					<button class="btn btn-primary" data-step-action="prev">
 						Back
 					</button>
-					<button class="btn btn-primary" data-step-action="next">
+					<button type="submit" class="btn btn-primary" data-step-action="next">
 						Check For Differences
 					</button>
 				</div>
 			</div>
 		</form>
 		<div id="comparison_page" class="container-fluid" data-step="2">
+			<h2 class="loading_text" data-text="Loading...">
+				Loading...
+			</h2>
+		</div>
+		<div id="comparison_page" class="container-fluid" data-step="3">
 			<div class="img_wrap">
 				<img id="img_1" class="img" />
 				<img id="img_2" class="img" />
 			</div>
 		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="/public/jquery.min.js"></script>
 		<script src="/public/script.js"></script>
 	</body>
 </html>

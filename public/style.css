@@ -3123,7 +3123,6 @@ input[type="button"].btn-block {
 
 /* line 31, scss/_autoqa.scss */
 form.container-fluid {
-  display: none;
   position: fixed;
   top: 0;
   left: 100vw;
@@ -3150,11 +3149,11 @@ form.container-fluid {
   /* line 27, scss/_autoqa.scss */
   form.container-fluid .btn {
     margin-top: 20px; }
-  /* line 34, scss/_autoqa.scss */
+  /* line 33, scss/_autoqa.scss */
   form.container-fluid .row {
     height: 100%; }
 
-/* line 40, scss/_autoqa.scss */
+/* line 39, scss/_autoqa.scss */
 #comparison_page {
   position: fixed;
   top: 0;
@@ -3162,8 +3161,7 @@ form.container-fluid {
   right: -100vw;
   bottom: 0;
   display: none;
-  transition: left 1000ms, right 1000ms;
-  display: none; }
+  transition: left 1000ms, right 1000ms; }
   /* line 11, scss/_autoqa.scss */
   #comparison_page.prev {
     left: -100vw;
@@ -3183,5 +3181,30 @@ form.container-fluid {
   /* line 27, scss/_autoqa.scss */
   #comparison_page .btn {
     margin-top: 20px; }
+
+/* line 44, scss/_autoqa.scss */
+input.has_error {
+  border-color: red !important; }
+
+/* line 48, scss/_autoqa.scss */
+.loading_text {
+  position: relative;
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 5em; }
+
+/* line 53, scss/_autoqa.scss */
+.loading_text:before {
+  content: attr(data-text);
+  position: absolute;
+  overflow: hidden;
+  max-width: 110%;
+  white-space: nowrap;
+  color: #333;
+  animation: loading 5s ease-in-out;
+  animation-iteration-count: infinite; }
+
+@keyframes loading {
+  0% {
+    max-width: 0; } }
 
 /*# sourceMappingURL=style.css.map */

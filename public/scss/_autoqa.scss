@@ -29,7 +29,6 @@
 	}
 }
 form.container-fluid {
-	display: none;
 	@include full_page();
 	.row {
 		height: 100%;
@@ -39,5 +38,30 @@ form.container-fluid {
 
 #comparison_page {
 	@include full_page();
-	display: none;
+}
+
+input {
+	&.has_error {
+		border-color: red !important;
+	}
+}
+.loading_text {
+	position: relative;
+	color: rgba(0, 0, 0, .3);
+	font-size: 5em
+}
+.loading_text:before {
+	content: attr(data-text);
+	position: absolute;
+	overflow: hidden;
+	max-width: 110%;
+	white-space: nowrap;
+	color: #333;
+	animation: loading 5s ease-in-out;
+	animation-iteration-count: infinite;
+}
+@keyframes loading {
+	0% {
+		max-width: 0;
+	}
 }

@@ -33,9 +33,9 @@ if form.has_key('comparison_image'):
         compare_image = form['comparison_image']
         uploaded_file = compare_image.file
         filename, ext = os.path.splitext(compare_image.filename)
-        uploaded_file_path = os.path.join('../uploads', hashlib.sha1(filename).hexdigest() + ext)
+        uploaded_file_path = os.path.join('uploads', hashlib.sha1(filename).hexdigest() + ext)
         try:
-            write_stream = file(uploaded_file_path, 'wb')
+            write_stream = file('../' + uploaded_file_path, 'wb')
             while 1:
                 chunk = uploaded_file.read(10000)
                 if not chunk: break;
@@ -43,19 +43,19 @@ if form.has_key('comparison_image'):
             write_stream.close()
             json_return_obj['uploaded_file'] = {
                 'status': 'Success',
-                'text': uploaded_file_path
+                'url': uploaded_file_path
             }
         except:
             uploaded_file_path = None
             json_return_obj['uploaded_file'] = {
                 'status': 'Error',
-                'text': 'Couldn\'t write to server'
+                'url': 'Couldn\'t write to server'
             }
 
 else:
         json_return_obj['uploaded_file'] = {
             'status': 'Error',
-            'text': 'No File to upload'
+            'url': 'No File to upload'
         }
 
 
@@ -65,25 +65,25 @@ if form.has_key('website_address'):
     shorter_url = web_url.replace('http://', '')
     safe_url = file_date_prefix + shorter_url.replace('/', '')
     screenshot_img = autoqa.getPageScreenshot(web_url)
-    screenshot_filepath = os.path.join('../uploads/', safe_url + '.png')
+    screenshot_filepath = os.path.join('uploads/', safe_url + '.png')
 
-    screenshot_img.save(screenshot_filepath)
-    json_return_obj['url'] = {
+    screenshot_img.save('../' + screenshot_filepath)
+    json_return_obj['screenshot'] = {
         'status': 'Success',
-        'text': screenshot_filepath
+        'url': screenshot_filepath
     }
 
 
 
 if uploaded_file_path and screenshot_filepath:
     (diff_img, threshold_img, contours_img) = autoqa.compareImages(uploaded_file_path, screenshot_filepath)
-    comparison_image_prefix = os.path.relpath(os.path.join('../comparisons/'))
+    comparison_image_prefix = 'comparisons/'
 
-    cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'diff_img.png', diff_img)
-    cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'threshold_img.png', threshold_img)
-    cv2.imwrite(comparison_image_prefix + '/' + file_date_prefix + 'contours_img.png', contours_img)
+    cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'diff_img.png'), diff_img)
+    cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'threshold_img.png'), threshold_img)
+    cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'contours_img.png'), contours_img)
     json_return_obj['comparisons'] = {
-        'prefix': comparison_image_prefix + '/' + file_date_prefix,
+        'url': comparison_image_prefix + '/' + file_date_prefix,
         'suffixes': ['diff_img.png', 'threshold_img.png', 'contours_img.png']
     }
 

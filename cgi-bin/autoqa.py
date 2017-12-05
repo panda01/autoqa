@@ -125,8 +125,8 @@ def fullpageScreenshot(driver, file = "temp_image"):
 # Found this on http://www.pyimagesearch.com/2017/06/19/image-difference-with-opencv-and-python/
 def compareImages(image1Path, image2Path, area_threshold = 10):
     # grayscale images
-    image1 = cv2.imread(os.path.abspath(image1Path), 1)
-    image2 = cv2.imread(os.path.abspath(image2Path), 1)
+    image1 = cv2.imread(os.path.abspath('../' + image1Path), 1)
+    image2 = cv2.imread(os.path.abspath('../' + image2Path), 1)
     gray1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
 

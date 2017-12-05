@@ -15,7 +15,7 @@
 			processData: false,
 			contentType: false,
 			success: function(data, textStatus, jqXHR) {
-				debugger;
+				stepManager.next(data);
 			},
 			error: function(jqXHR, textStatus, error) {
 				debugger;
@@ -54,22 +54,28 @@
 			}
 
 			return true;
-		},
-		function(el) {
-			return true;
 		}
 	];
 	var onEnterStep = [
-		function(nextFn) {
+		// Get the URL
+		function() {
+			// Give the input box focus
 			setTimeout(function() {
 				var $urlInput = $('#website_address');
 				$urlInput.focus();
 			}, 1);
 		},
-		function(nextFn) {
-		},
-		function(nextFn) {
+		// Get the comparison Image
+		function() {},
+		// Loading Request
+		function() {
 			makeCompareRequest();
+		},
+		// Show the result
+		function (data) {
+			// Load the images for the user to see
+			$('#screenshot_img').attr('src', data.screenshot.url);
+			$('#comparison_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
 		}
 	];
 
@@ -84,10 +90,7 @@
 			if(action === 'prev') {
 				prev();
 			} else {
-				if(validation[currStep]()) {
-					next();
-				} else {
-				}
+				protectedNext();
 			}
 		});
 		$steps.on('keydown', 'input', function(evt) {
@@ -107,7 +110,11 @@
 			}
 
 			// Fire Enter Function
-			onEnterStep[currStep]();
+			var enterFn = onEnterStep[currStep];
+			var enterFnIsDefined = enterFn !== undefined;
+			if(enterFnIsDefined) {
+				enterFn.apply(this, arguments);
+			}
 			var $curr = $($steps[currStep]);
 			$curr.addClass('current');
 			$curr.nextAll().addClass('next');
@@ -126,13 +133,29 @@
 			$curr.prevAll().addClass('prev');
 		}
 		next();
+		function protectedNext(data) {
+			var validationFn = validation[currStep];
+			var validationFnIsDefined = validationFn !== undefined;
+			if(validationFnIsDefined && !validationFn()) {
+				return false;
+			}
+			next(data);
+			return true;
+		}
+
+		return {
+			next: protectedNext,
+			prev: prev
+		};
 
 	}
+
+	var stepManager;
 	$(document).ready(function() {
 		var doAjaxForm = location.href.indexOf('noajax') === -1;
 		if(doAjaxForm) {
 			// attachFormEvents();
 		}
-		manageSteps();
+		stepManager = manageSteps();
 	});
 }(jQuery));

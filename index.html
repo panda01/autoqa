@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="/public/style.css">
 	</head>
 	<body>
-		<form class="container-fluid" data-step="0">
+		<form class="container-fluid form" data-step="0">
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
 					<label for="website_address"><h3>Enter an URL:</h3></label>
@@ -18,7 +18,7 @@
 				</div>
 			</div>
 		</form>
-		<form class="container-fluid" data-step="1">
+		<form class="container-fluid form" data-step="1">
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
 					<label for="comparison_image"><h3>Choose an Image to compare</h3></label>
@@ -32,13 +32,13 @@
 				</div>
 			</div>
 		</form>
-		<div id="comparison_page" class="container-fluid" data-step="2">
+		<div id="loading_page" class="container-fluid" data-step="2">
 			<h2 class="loading_text" data-text="Loading...">
 				Loading...
 			</h2>
 		</div>
 		<div id="comparison_page" class="container-fluid" data-step="3">
-			<div class="img_wrap">
+			<div id="img_wrap">
 				<img id="screenshot_img" class="img" />
 				<img id="comparison_img" class="img" />
 			</div>

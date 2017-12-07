@@ -1,4 +1,27 @@
 (function($) {
+	function loadSubURL() {
+		var whole_path = document.location.pathname;
+		var isSubUrl = whole_path.length > 1;
+		if (!isSubUrl) {
+			return;
+		}
+		var file_prefix = whole_path.substring(4);
+		var fake_ajax_data_obj = {
+			uploaded_file: {
+				'status': 'Success',
+				'url': '/uploads/' + file_prefix + 'upload.png'
+			},
+			screenshot: {
+				url: '/uploads/' + file_prefix + 'screenshot.png'
+			},
+			comparisons: {
+				url: '/comparisons/' + file_prefix,
+				suffixes: ['diff_img.png', 'threshold_img.png', 'contours_img.png']
+			}
+		};
+		stepManager.jumpTo(3);
+		enterLastStep(fake_ajax_data_obj);
+	}
 	function makeCompareRequest(successFn) {
 		var files_list = $('#comparison_image')[0].files;
 		var form_data = new FormData();
@@ -15,6 +38,7 @@
 			processData: false,
 			contentType: false,
 			success: function(data, textStatus, jqXHR) {
+				history.pushState(data, "Check your website", 'qa/' + data.hash);
 				stepManager.next(data);
 			},
 			error: function(jqXHR, textStatus, error) {
@@ -56,6 +80,16 @@
 			return true;
 		}
 	];
+	function enterLastStep(data) {
+		// Load the images for the user to see
+		$('#screenshot_img').attr('src', data.screenshot.url);
+		$('#comparison_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
+		var options = {
+			title: false,
+			tooltip: false
+		};
+		var ImagesViewer = new window.Viewer(document.getElementById('img_wrap'), options);
+	}
 	var onEnterStep = [
 		// Get the URL
 		function() {
@@ -72,11 +106,7 @@
 			makeCompareRequest();
 		},
 		// Show the result
-		function (data) {
-			// Load the images for the user to see
-			$('#screenshot_img').attr('src', data.screenshot.url);
-			$('#comparison_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
-		}
+		enterLastStep
 	];
 
 	function manageSteps(finishFn) {
@@ -102,7 +132,6 @@
 		});
 
 		function next() {
-			$steps.removeClass('current');
 			currStep++;
 			if(currStep >= $steps.length) {
 				currStep = $steps.length - 1;
@@ -115,18 +144,22 @@
 			if(enterFnIsDefined) {
 				enterFn.apply(this, arguments);
 			}
-			var $curr = $($steps[currStep]);
-			$curr.addClass('current');
-			$curr.nextAll().addClass('next');
-			$curr.prevAll().addClass('prev');
+			_loadCurrStep();
 		}
 		function prev() {
-			$steps.removeClass('current')
 			currStep--;
 			if(currStep < 0) {
 				currStep = 0;
 				return;
 			}
+			_loadCurrStep();
+		}
+		function _loadCurrStep(idx) {
+			var loadParamIdx = idx !== undefined;
+			if(loadParamIdx) {
+				currStep = idx;
+			}
+			$steps.removeClass('current');
 			var $curr = $($steps[currStep]);
 			$curr.addClass('current');
 			$curr.nextAll().addClass('next');
@@ -145,17 +178,17 @@
 
 		return {
 			next: protectedNext,
-			prev: prev
+			prev: prev,
+			jumpTo: function(whichIdx) {
+				var safeIdx = whichIdx % $steps.length;
+				_loadCurrStep(safeIdx);
+			}
 		};
-
 	}
 
 	var stepManager;
 	$(document).ready(function() {
-		var doAjaxForm = location.href.indexOf('noajax') === -1;
-		if(doAjaxForm) {
-			// attachFormEvents();
-		}
 		stepManager = manageSteps();
+		loadSubURL();
 	});
 }(jQuery));

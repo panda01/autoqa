@@ -3121,8 +3121,11 @@ input[type="reset"].btn-block,
 input[type="button"].btn-block {
   width: 100%; }
 
-/* line 31, scss/_autoqa.scss */
-form.container-fluid {
+@keyframes loading {
+  0% {
+    max-width: 0; } }
+/* line 34, scss/_autoqa.scss */
+.container-fluid {
   position: fixed;
   top: 0;
   left: 100vw;
@@ -3130,70 +3133,40 @@ form.container-fluid {
   bottom: 0;
   display: none;
   transition: left 1000ms, right 1000ms; }
-  /* line 11, scss/_autoqa.scss */
-  form.container-fluid.prev {
+  /* line 9, scss/_autoqa.scss */
+  .container-fluid.prev {
     left: -100vw;
     right: 100vw; }
-  /* line 15, scss/_autoqa.scss */
-  form.container-fluid.next {
+  /* line 13, scss/_autoqa.scss */
+  .container-fluid.next {
     left: 100vw;
     right: -100vw; }
-  /* line 19, scss/_autoqa.scss */
-  form.container-fluid.current {
+  /* line 17, scss/_autoqa.scss */
+  .container-fluid.current {
     display: flex;
     left: 0;
     right: 0; }
-    /* line 23, scss/_autoqa.scss */
-    form.container-fluid.current .row {
+    /* line 21, scss/_autoqa.scss */
+    .container-fluid.current .row {
       width: 100%; }
-  /* line 27, scss/_autoqa.scss */
-  form.container-fluid .btn {
+  /* line 25, scss/_autoqa.scss */
+  .container-fluid .btn {
     margin-top: 20px; }
-  /* line 33, scss/_autoqa.scss */
-  form.container-fluid .row {
+  /* line 36, scss/_autoqa.scss */
+  .container-fluid .row {
     height: 100%; }
 
-/* line 39, scss/_autoqa.scss */
-#comparison_page {
-  position: fixed;
-  top: 0;
-  left: 100vw;
-  right: -100vw;
-  bottom: 0;
-  display: none;
-  transition: left 1000ms, right 1000ms; }
-  /* line 11, scss/_autoqa.scss */
-  #comparison_page.prev {
-    left: -100vw;
-    right: 100vw; }
-  /* line 15, scss/_autoqa.scss */
-  #comparison_page.next {
-    left: 100vw;
-    right: -100vw; }
-  /* line 19, scss/_autoqa.scss */
-  #comparison_page.current {
-    display: flex;
-    left: 0;
-    right: 0; }
-    /* line 23, scss/_autoqa.scss */
-    #comparison_page.current .row {
-      width: 100%; }
-  /* line 27, scss/_autoqa.scss */
-  #comparison_page .btn {
-    margin-top: 20px; }
-
-/* line 44, scss/_autoqa.scss */
-input.has_error {
+/* line 42, scss/_autoqa.scss */
+.form .form-control.has_error {
   border-color: red !important; }
 
-/* line 48, scss/_autoqa.scss */
-.loading_text {
+/* line 49, scss/_autoqa.scss */
+#loading_page .loading_text {
   position: relative;
   color: rgba(0, 0, 0, 0.3);
   font-size: 5em; }
-
-/* line 53, scss/_autoqa.scss */
-.loading_text:before {
+/* line 54, scss/_autoqa.scss */
+#loading_page .loading_text:before {
   content: attr(data-text);
   position: absolute;
   overflow: hidden;
@@ -3203,8 +3176,13 @@ input.has_error {
   animation: loading 5s ease-in-out;
   animation-iteration-count: infinite; }
 
-@keyframes loading {
-  0% {
-    max-width: 0; } }
+/* line 65, scss/_autoqa.scss */
+#img_wrap {
+  height: 100%;
+  display: flex;
+  align-items: center; }
+  /* line 69, scss/_autoqa.scss */
+  #img_wrap img {
+    max-height: 90vh; }
 
 /*# sourceMappingURL=style.css.map */

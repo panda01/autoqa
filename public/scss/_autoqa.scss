@@ -1,5 +1,3 @@
-
-
 @mixin full_page {
 	position: fixed;
 	top: 0;
@@ -28,40 +26,47 @@
 		margin-top: 20px;
 	}
 }
-form.container-fluid {
+@keyframes loading {
+	0% {
+		max-width: 0;
+	}
+}
+.container-fluid {
 	@include full_page();
 	.row {
 		height: 100%;
 	}
 }
-
-
-#comparison_page {
-	@include full_page();
-}
-
-input {
-	&.has_error {
-		border-color: red !important;
+.form {
+	.form-control {
+		&.has_error {
+			border-color: red !important;
+		}
 	}
 }
-.loading_text {
-	position: relative;
-	color: rgba(0, 0, 0, .3);
-	font-size: 5em
+
+#loading_page {
+	.loading_text {
+		position: relative;
+		color: rgba(0, 0, 0, .3);
+		font-size: 5em
+	}
+	.loading_text:before {
+		content: attr(data-text);
+		position: absolute;
+		overflow: hidden;
+		max-width: 110%;
+		white-space: nowrap;
+		color: #333;
+		animation: loading 5s ease-in-out;
+		animation-iteration-count: infinite;
+	}
 }
-.loading_text:before {
-	content: attr(data-text);
-	position: absolute;
-	overflow: hidden;
-	max-width: 110%;
-	white-space: nowrap;
-	color: #333;
-	animation: loading 5s ease-in-out;
-	animation-iteration-count: infinite;
-}
-@keyframes loading {
-	0% {
-		max-width: 0;
+#img_wrap {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	img {
+		max-height: 90vh;
 	}
 }

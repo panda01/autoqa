@@ -23,8 +23,10 @@ json_return_obj = {};
 form = cgi.FieldStorage()
 # db = MySQLdb.connect(host="127.0.0.1", port=3306, user="root", passwd="root", db="autoqa_db_v1")
 # cursor = db.cursor()
+
+web_url = form["website_address"].value
 now = datetime.datetime.now()
-file_date_prefix = now.strftime('%y-%-m-%-d_%-H:%-M:%-S_')
+file_date_prefix = now.strftime('%y-%-m-%-d_%-H:%-M:%-S_') + hashlib.sha1(web_url).hexdigest() + '_'
 
 
 uploaded_file_path = None
@@ -33,7 +35,7 @@ if form.has_key('comparison_image'):
         compare_image = form['comparison_image']
         uploaded_file = compare_image.file
         filename, ext = os.path.splitext(compare_image.filename)
-        uploaded_file_path = os.path.join('uploads', hashlib.sha1(filename).hexdigest() + ext)
+        uploaded_file_path = os.path.join('uploads',  file_date_prefix + 'upload' + ext)
         try:
             write_stream = file('../' + uploaded_file_path, 'wb')
             while 1:
@@ -62,10 +64,9 @@ else:
 if form.has_key('website_address'):
     web_url = form["website_address"].value
     shorter_url = web_url.replace('http://', '')
-    shorter_url = web_url.replace('http://', '')
     safe_url = file_date_prefix + shorter_url.replace('/', '')
     screenshot_img = autoqa.getPageScreenshot(web_url)
-    screenshot_filepath = os.path.join('uploads/', safe_url + '.png')
+    screenshot_filepath = os.path.join('uploads/', file_date_prefix + 'screenshot.png')
 
     screenshot_img.save('../' + screenshot_filepath)
     json_return_obj['screenshot'] = {
@@ -83,8 +84,10 @@ if uploaded_file_path and screenshot_filepath:
     cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'threshold_img.png'), threshold_img)
     cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'contours_img.png'), contours_img)
     json_return_obj['comparisons'] = {
-        'url': comparison_image_prefix + '/' + file_date_prefix,
+        'url': comparison_image_prefix + file_date_prefix,
         'suffixes': ['diff_img.png', 'threshold_img.png', 'contours_img.png']
     }
+
+json_return_obj['hash'] = file_date_prefix
 
 print JSONEncoder().encode(json_return_obj)

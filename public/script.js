@@ -19,6 +19,9 @@
 				suffixes: ['diff_img.png', 'threshold_img.png', 'contours_img.png']
 			}
 		};
+		console.log(fake_ajax_data_obj);
+
+		// Jump to the step and load the images
 		stepManager.jumpTo(3);
 		enterLastStep(fake_ajax_data_obj);
 	}
@@ -83,7 +86,10 @@
 	function enterLastStep(data) {
 		// Load the images for the user to see
 		$('#screenshot_img').attr('src', data.screenshot.url);
-		$('#comparison_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
+		$('#uploaded_img').attr('src', data.uploaded_file.url);
+		$('#diff_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
+		$('#threshold_img').attr('src', data.comparisons.url + data.comparisons.suffixes[1]);
+		$('#contours_img').attr('src', data.comparisons.url + data.comparisons.suffixes[2]);
 		var options = {
 			title: false,
 			tooltip: false

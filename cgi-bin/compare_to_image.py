@@ -45,7 +45,7 @@ if form.has_key('comparison_image'):
             write_stream.close()
             json_return_obj['uploaded_file'] = {
                 'status': 'Success',
-                'url': uploaded_file_path
+                'url': '/' + uploaded_file_path
             }
         except:
             uploaded_file_path = None
@@ -71,7 +71,7 @@ if form.has_key('website_address'):
     screenshot_img.save('../' + screenshot_filepath)
     json_return_obj['screenshot'] = {
         'status': 'Success',
-        'url': screenshot_filepath
+        'url': '/' + screenshot_filepath
     }
 
 
@@ -84,7 +84,7 @@ if uploaded_file_path and screenshot_filepath:
     cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'threshold_img.png'), threshold_img)
     cv2.imwrite(os.path.join('..', comparison_image_prefix, file_date_prefix + 'contours_img.png'), contours_img)
     json_return_obj['comparisons'] = {
-        'url': comparison_image_prefix + file_date_prefix,
+        'url': '/' + comparison_image_prefix + file_date_prefix,
         'suffixes': ['diff_img.png', 'threshold_img.png', 'contours_img.png']
     }
 

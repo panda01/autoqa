@@ -3177,11 +3177,16 @@ input[type="button"].btn-block {
   animation-iteration-count: infinite; }
 
 /* line 65, scss/_autoqa.scss */
+#comparison_page {
+  justify-content: center; }
+
+/* line 68, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;
-  align-items: center; }
-  /* line 69, scss/_autoqa.scss */
+  align-items: center;
+  justify-content: center; }
+  /* line 73, scss/_autoqa.scss */
   #img_wrap img {
     max-height: 90vh; }
 

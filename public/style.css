@@ -3123,70 +3123,83 @@ input[type="button"].btn-block {
 
 @keyframes loading {
   0% {
-    max-width: 0; } }
-/* line 34, scss/_autoqa.scss */
+    left: -140px; }
+  50% {
+    left: 290px; }
+  100% {
+    left: -140px; } }
+/* line 38, scss/_autoqa.scss */
+#loading_page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; }
+  /* line 43, scss/_autoqa.scss */
+  #loading_page .maintext {
+    margin-bottom: 10px; }
+  /* line 46, scss/_autoqa.scss */
+  #loading_page .subtext {
+    text-align: center;
+    margin-top: 10px; }
+
+/* line 51, scss/_autoqa.scss */
+#loader {
+  height: 3px;
+  width: 300px;
+  overflow: hidden;
+  position: relative; }
+  /* line 56, scss/_autoqa.scss */
+  #loader .bar {
+    background-color: #000;
+    height: 100%;
+    width: 150px;
+    position: absolute;
+    left: -149px;
+    animation-name: loading;
+    animation-duration: 3s;
+    animation-iteration-count: infinite; }
+
+/* line 67, scss/_autoqa.scss */
 .container-fluid {
   position: fixed;
   top: 0;
-  left: 100vw;
-  right: -100vw;
+  opacity: 0;
+  z-index: -1;
+  left: 0;
+  right: 0;
   bottom: 0;
   display: none;
-  transition: left 1000ms, right 1000ms; }
-  /* line 9, scss/_autoqa.scss */
-  .container-fluid.prev {
-    left: -100vw;
-    right: 100vw; }
-  /* line 13, scss/_autoqa.scss */
-  .container-fluid.next {
-    left: 100vw;
-    right: -100vw; }
-  /* line 17, scss/_autoqa.scss */
+  transition: opacity 1000ms; }
+  /* line 15, scss/_autoqa.scss */
   .container-fluid.current {
     display: flex;
-    left: 0;
-    right: 0; }
-    /* line 21, scss/_autoqa.scss */
+    opacity: 100;
+    z-index: 1; }
+    /* line 19, scss/_autoqa.scss */
     .container-fluid.current .row {
       width: 100%; }
-  /* line 25, scss/_autoqa.scss */
+  /* line 23, scss/_autoqa.scss */
   .container-fluid .btn {
     margin-top: 20px; }
-  /* line 36, scss/_autoqa.scss */
+  /* line 69, scss/_autoqa.scss */
   .container-fluid .row {
     height: 100%; }
 
-/* line 42, scss/_autoqa.scss */
+/* line 75, scss/_autoqa.scss */
 .form .form-control.has_error {
   border-color: red !important; }
 
-/* line 49, scss/_autoqa.scss */
-#loading_page .loading_text {
-  position: relative;
-  color: rgba(0, 0, 0, 0.3);
-  font-size: 5em; }
-/* line 54, scss/_autoqa.scss */
-#loading_page .loading_text:before {
-  content: attr(data-text);
-  position: absolute;
-  overflow: hidden;
-  max-width: 110%;
-  white-space: nowrap;
-  color: #333;
-  animation: loading 5s ease-in-out;
-  animation-iteration-count: infinite; }
-
-/* line 65, scss/_autoqa.scss */
+/* line 83, scss/_autoqa.scss */
 #comparison_page {
   justify-content: center; }
 
-/* line 68, scss/_autoqa.scss */
+/* line 86, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center; }
-  /* line 73, scss/_autoqa.scss */
+  /* line 91, scss/_autoqa.scss */
   #img_wrap img {
     max-height: 90vh; }
 

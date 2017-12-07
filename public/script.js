@@ -1,8 +1,17 @@
 (function($) {
-	function loadSubURL() {
+	function loadSubURL(url) {
 		var whole_path = document.location.pathname;
-		var isSubUrl = whole_path.length > 1;
-		if (!isSubUrl) {
+		var isFirstStep = whole_path === '/';
+		if(isFirstStep) {
+			stepManager.jumpTo(0);
+			return;
+		}
+		var urlWithoutFirstSlash = whole_path.substring(1);
+		var isAddFileStep = urlWithoutFirstSlash.indexOf('file/') === 0;
+		if (isAddFileStep) {
+			stepManager.jumpTo(1);
+			var encodedUrl = urlWithoutFirstSlash.substring(('file/').length);
+			$('#website_address').val(decodeURIComponent(encodedUrl));
 			return;
 		}
 		var file_prefix = whole_path.substring(4);
@@ -25,6 +34,10 @@
 		stepManager.jumpTo(3);
 		enterLastStep(fake_ajax_data_obj);
 	}
+	// While on the page be sure to capture changes in the url
+	window.onpopstate = function() {
+		loadSubURL(document.location.href);
+	}
 	function makeCompareRequest(successFn) {
 		var files_list = $('#comparison_image')[0].files;
 		var form_data = new FormData();
@@ -41,7 +54,7 @@
 			processData: false,
 			contentType: false,
 			success: function(data, textStatus, jqXHR) {
-				history.pushState(data, "Check your website", 'qa/' + data.hash);
+				history.pushState(data, "Check your website", '/qa/' + data.hash);
 				stepManager.next(data);
 			},
 			error: function(jqXHR, textStatus, error) {
@@ -106,7 +119,9 @@
 			}, 1);
 		},
 		// Get the comparison Image
-		function() {},
+		function() {
+			history.pushState({}, "Add a File to compare", '/file/' + encodeURIComponent($('#website_address').val()));
+		},
 		// Loading Request
 		function() {
 			makeCompareRequest();
@@ -195,6 +210,6 @@
 	var stepManager;
 	$(document).ready(function() {
 		stepManager = manageSteps();
-		loadSubURL();
+		loadSubURL(document.location.pathname);
 	});
 }(jQuery));

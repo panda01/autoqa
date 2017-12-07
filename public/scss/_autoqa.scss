@@ -1,23 +1,21 @@
 @mixin full_page {
 	position: fixed;
 	top: 0;
-	left: 100vw;
-	right: -100vw;
+	opacity: 0;
+	z-index: -1;
+	left: 0;
+	right: 0;
 	bottom: 0;
 	display: none;
-	transition: left 1000ms, right 1000ms;
+	transition: opacity 1000ms;
 	&.prev {
-		left: -100vw;
-		right: 100vw;
 	}
 	&.next {
-		left: 100vw;
-		right: -100vw;
 	}
 	&.current {
 		display: flex;
-		left: 0;
-		right: 0;
+		opacity: 100;
+		z-index: 1;
 		.row {
 			width: 100%;
 		}
@@ -28,7 +26,42 @@
 }
 @keyframes loading {
 	0% {
-		max-width: 0;
+		left: -140px;
+	}
+	50% {
+		left: 290px;
+	}
+	100% {
+		left: -140px;
+	}
+}
+#loading_page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	.maintext {
+		margin-bottom: 10px;
+	}
+	.subtext {
+		text-align: center;
+		margin-top: 10px;
+	}
+}
+#loader {
+	height: 3px;
+	width: 300px;
+	overflow: hidden;
+	position: relative;
+	.bar {
+		background-color: #000;
+		height: 100%;
+		width: 150px;
+		position: absolute;
+		left: -149px;
+		animation-name: loading;
+		animation-duration: 3s;
+		animation-iteration-count: infinite;
 	}
 }
 .container-fluid {
@@ -46,21 +79,6 @@
 }
 
 #loading_page {
-	.loading_text {
-		position: relative;
-		color: rgba(0, 0, 0, .3);
-		font-size: 5em
-	}
-	.loading_text:before {
-		content: attr(data-text);
-		position: absolute;
-		overflow: hidden;
-		max-width: 110%;
-		white-space: nowrap;
-		color: #333;
-		animation: loading 5s ease-in-out;
-		animation-iteration-count: infinite;
-	}
 }
 #comparison_page {
 	justify-content: center;

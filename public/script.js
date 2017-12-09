@@ -133,10 +133,10 @@
 		imgObjToAdd.onload = function() {
 			$('#img_wrap').append(this);
 			var downloadLinkText = 'Download ' + imgTitle;
-			$('#download_links_wrap').append('<a target="_blank" href="' + url + '?view=download">' + downloadLinkText + '</a>');
+			$('#download_links_wrap').append('<div><a target="_blank" href="' + url + '?view=download">' + downloadLinkText + '</a></div>');
 		};
 		imgObjToAdd.onerror = function(a, b, c) {
-			debugger;
+			alert('image couldn\'t be found, maybe just start over again?');
 		};
 		imgObjToAdd.src = url;
 		if(additionalClasses === undefined) {

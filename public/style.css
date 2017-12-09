@@ -3207,6 +3207,10 @@ input[type="button"].btn-block {
     height: calc(100vh - 75px); }
 
 /* line 100, scss/_autoqa.scss */
+#multi_view {
+  height: 100%; }
+
+/* line 103, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;

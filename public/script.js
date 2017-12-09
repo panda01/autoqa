@@ -47,11 +47,23 @@
 
 		// Jump to the step and load the images
 		stepManager.jumpTo(3);
-		enterLastStep(fake_ajax_data_obj);
+		initComparisonPage(fake_ajax_data_obj);
 	}
 	// While on the page be sure to capture changes in the url
 	window.onpopstate = function() {
 		loadSubURL(document.location.href);
+	}
+	function initComparisonPage(data) {
+		// Load the images for the user to see
+		addImageToView(data.screenshot.url, 'Screenshot', 'flex-first');
+		if( data.comparisons ) {
+			$('#title').html('Auto QA:');
+			addImageToView(data.comparisons.url + data.comparisons.suffixes[2], 'Diff');
+			addImageToView(data.uploaded_file.url, 'Uploaded File', 'flex-last');
+		} else {
+			$('#title').html('Screenshots:');
+			$('#now_viewing').html('Download the image and save for a later QA');
+		}
 	}
 	function makeCompareRequest(successFn) {
 		var files_list = $('#comparison_image')[0].files;
@@ -116,10 +128,12 @@
 			return true;
 		}
 	];
-	function addImageToView(url, additionalClasses) {
+	function addImageToView(url, imgTitle, additionalClasses) {
 		var imgObjToAdd = new Image();
 		imgObjToAdd.onload = function() {
 			$('#img_wrap').append(this);
+			var downloadLinkText = 'Download ' + imgTitle;
+			$('#download_links_wrap').append('<a target="_blank" href="' + url + '?view=download">' + downloadLinkText + '</a>');
 		};
 		imgObjToAdd.onerror = function(a, b, c) {
 			debugger;
@@ -129,23 +143,6 @@
 			additionalClasses = '';
 		}
 		imgObjToAdd.className = 'col-md-4 ' + additionalClasses;
-	}
-	function enterLastStep(data) {
-		// Load the images for the user to see
-		addImageToView(data.screenshot.url, 'flex-first');
-		if( data.comparisons ) {
-			$('#title').html('Auto QA:');
-			addImageToView(data.comparisons.url + data.comparisons.suffixes[2]);
-			addImageToView(data.uploaded_file.url, 'flex-last');
-		} else {
-			$('#title').html('Screenshots:');
-			$('#now_viewing').html('Download the image and save for a later QA');
-		}
-		var options = {
-			title: false,
-			tooltip: false
-		};
-		var ImagesViewer = new window.Viewer(document.getElementById('img_wrap'), options);
 	}
 	var onEnterStep = [
 		// Get the URL
@@ -165,7 +162,7 @@
 			makeCompareRequest();
 		},
 		// Show the result
-		enterLastStep
+		initComparisonPage
 	];
 
 	function manageSteps(finishFn) {

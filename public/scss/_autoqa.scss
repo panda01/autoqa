@@ -97,6 +97,9 @@ $title_row_height: 75px;
 		height: calc(100vh - #{$title_row_height});
 	}
 }
+#multi_view {
+	height: 100%;
+}
 #img_wrap {
 	height: 100%;
 	display: flex;

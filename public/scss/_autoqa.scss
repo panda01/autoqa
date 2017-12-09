@@ -35,6 +35,7 @@
 		left: -140px;
 	}
 }
+$title_row_height: 75px;
 #loading_page {
 	display: flex;
 	flex-direction: column;
@@ -66,7 +67,7 @@
 }
 .container-fluid {
 	@include full_page();
-	.row {
+	> .row {
 		height: 100%;
 	}
 }
@@ -82,13 +83,26 @@
 }
 #comparison_page {
 	justify-content: center;
+	flex-wrap: wrap;
+	.sub_title {
+		display: flex;
+	}
+	> .row {
+		height: auto;
+	}
+	.title_row {
+		height: $title_row_height;
+	}
+	.content_row {
+		height: calc(100vh - #{$title_row_height});
+	}
 }
 #img_wrap {
 	height: 100%;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
+	overflow-y: scroll;
 	img {
-		max-height: 90vh;
 	}
 }

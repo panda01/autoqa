@@ -64,12 +64,12 @@ else:
 if form.has_key('website_address'):
     web_url = form["website_address"].value
     shorter_url = web_url.replace('http://', '')
-    safe_url = file_date_prefix + shorter_url.replace('/', '')
     screenshot_img = autoqa.getPageScreenshot(web_url)
     screenshot_filepath = os.path.join('uploads/', file_date_prefix + 'screenshot.png')
 
     screenshot_img.save('../' + screenshot_filepath)
     json_return_obj['screenshot'] = {
+        'title': shorter_url,
         'status': 'Success',
         'url': '/' + screenshot_filepath
     }

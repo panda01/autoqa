@@ -42,14 +42,24 @@
 			</p>
 		</div>
 		<div id="comparison_page" class="container-fluid" data-step="3">
-			<div id="img_wrap">
-				<img id="contours_img" class="img" />
-				<img id="threshold_img" class="img" />
-				<!--
-				<img id="screenshot_img" class="img" />
-				<img id="uploaded_img" class="img" />
-				<img id="diff_img" class="img" />
-				-->
+			<div class="col-md-12">
+				<div class="row title_row">
+					<h1 id="title" class="col-md-4"></h1>
+					<div class="col-md-8 sub_title">
+						<div class="col-md-4">Screenshot: </div>
+						<div class="col-md-4">Diff: </div>
+						<div class="col-md-4">Uploaded File: </div>
+					</div>
+				</div>
+			</div>
+			<div class="row content_row">
+				<div id="info" class="col-md-4">
+					<h5 id="now_viewing"></h5>
+				</div>
+				<div class="col-md-8">
+					<div id="img_wrap" class="row">
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="/public/jquery.min.js"></script>

@@ -3128,27 +3128,27 @@ input[type="button"].btn-block {
     left: 290px; }
   100% {
     left: -140px; } }
-/* line 38, scss/_autoqa.scss */
+/* line 39, scss/_autoqa.scss */
 #loading_page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; }
-  /* line 43, scss/_autoqa.scss */
+  /* line 44, scss/_autoqa.scss */
   #loading_page .maintext {
     margin-bottom: 10px; }
-  /* line 46, scss/_autoqa.scss */
+  /* line 47, scss/_autoqa.scss */
   #loading_page .subtext {
     text-align: center;
     margin-top: 10px; }
 
-/* line 51, scss/_autoqa.scss */
+/* line 52, scss/_autoqa.scss */
 #loader {
   height: 3px;
   width: 300px;
   overflow: hidden;
   position: relative; }
-  /* line 56, scss/_autoqa.scss */
+  /* line 57, scss/_autoqa.scss */
   #loader .bar {
     background-color: #000;
     height: 100%;
@@ -3159,7 +3159,7 @@ input[type="button"].btn-block {
     animation-duration: 3s;
     animation-iteration-count: infinite; }
 
-/* line 67, scss/_autoqa.scss */
+/* line 68, scss/_autoqa.scss */
 .container-fluid {
   position: fixed;
   top: 0;
@@ -3181,26 +3181,37 @@ input[type="button"].btn-block {
   /* line 23, scss/_autoqa.scss */
   .container-fluid .btn {
     margin-top: 20px; }
-  /* line 69, scss/_autoqa.scss */
-  .container-fluid .row {
+  /* line 70, scss/_autoqa.scss */
+  .container-fluid > .row {
     height: 100%; }
 
-/* line 75, scss/_autoqa.scss */
+/* line 76, scss/_autoqa.scss */
 .form .form-control.has_error {
   border-color: red !important; }
 
-/* line 83, scss/_autoqa.scss */
+/* line 84, scss/_autoqa.scss */
 #comparison_page {
-  justify-content: center; }
+  justify-content: center;
+  flex-wrap: wrap; }
+  /* line 87, scss/_autoqa.scss */
+  #comparison_page .sub_title {
+    display: flex; }
+  /* line 90, scss/_autoqa.scss */
+  #comparison_page > .row {
+    height: auto; }
+  /* line 93, scss/_autoqa.scss */
+  #comparison_page .title_row {
+    height: 75px; }
+  /* line 96, scss/_autoqa.scss */
+  #comparison_page .content_row {
+    height: calc(100vh - 75px); }
 
-/* line 86, scss/_autoqa.scss */
+/* line 100, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center; }
-  /* line 91, scss/_autoqa.scss */
-  #img_wrap img {
-    max-height: 90vh; }
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: scroll; }
 
 /*# sourceMappingURL=style.css.map */

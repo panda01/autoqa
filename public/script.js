@@ -1,4 +1,10 @@
 (function($) {
+	function _joinObj(obj1, obj2) {
+		for(var n in obj2) {
+			obj1[n] = obj2[n];
+		}
+		return obj1;
+	}
 	function loadSubURL(url) {
 		var whole_path = document.location.pathname;
 		var isFirstStep = whole_path === '/';
@@ -14,20 +20,29 @@
 			$('#website_address').val(decodeURIComponent(encodedUrl));
 			return;
 		}
+		var isOnlyScreenshot = urlWithoutFirstSlash.indexOf('screenshot/') === 0;
 		var file_prefix = whole_path.substring(4);
+		if (isOnlyScreenshot) {
+			file_prefix = urlWithoutFirstSlash.substring(('screenshot/').length);
+		}
 		var fake_ajax_data_obj = {
-			uploaded_file: {
-				'status': 'Success',
-				'url': '/uploads/' + file_prefix + 'upload.png'
-			},
 			screenshot: {
 				url: '/uploads/' + file_prefix + 'screenshot.png'
-			},
-			comparisons: {
-				url: '/comparisons/' + file_prefix,
-				suffixes: ['diff_img.png', 'threshold_img.png', 'contours_img.png']
 			}
 		};
+		if (!isOnlyScreenshot) {
+			var restOfFakeObj = {
+				uploaded_file: {
+					'status': 'Success',
+					'url': '/uploads/' + file_prefix + 'upload.png'
+				},
+				comparisons: {
+					url: '/comparisons/' + file_prefix,
+					suffixes: ['diff_img.png', 'threshold_img.png', 'contours_img.png']
+				}
+			}
+			fake_ajax_data_obj = _joinObj(fake_ajax_data_obj, restOfFakeObj);
+		}
 		console.log(fake_ajax_data_obj);
 
 		// Jump to the step and load the images
@@ -54,7 +69,12 @@
 			processData: false,
 			contentType: false,
 			success: function(data, textStatus, jqXHR) {
-				history.pushState(data, "Check your website", '/qa/' + data.hash);
+				var onlyScreenshot = data.comparisons === undefined;
+				if(onlyScreenshot) {
+					history.pushState(data, "Check your website", '/screenshot/' + data.hash);
+				} else {
+					history.pushState(data, "Check your website", '/qa/' + data.hash);
+				}
 				stepManager.next(data);
 			},
 			error: function(jqXHR, textStatus, error) {
@@ -84,7 +104,7 @@
 				return false;
 			}
 			// Up to 3 subdomain url regex
-			var urlRegex = /^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+[a-z0-9]+\.[a-z]+[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/;
+			var urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/;
 			var isUrl = urlRegex.test(saferInput);
 			if (!isUrl) {
 				$inputEl
@@ -96,13 +116,31 @@
 			return true;
 		}
 	];
+	function addImageToView(url, additionalClasses) {
+		var imgObjToAdd = new Image();
+		imgObjToAdd.onload = function() {
+			$('#img_wrap').append(this);
+		};
+		imgObjToAdd.onerror = function(a, b, c) {
+			debugger;
+		};
+		imgObjToAdd.src = url;
+		if(additionalClasses === undefined) {
+			additionalClasses = '';
+		}
+		imgObjToAdd.className = 'col-md-4 ' + additionalClasses;
+	}
 	function enterLastStep(data) {
 		// Load the images for the user to see
-		$('#screenshot_img').attr('src', data.screenshot.url);
-		$('#uploaded_img').attr('src', data.uploaded_file.url);
-		$('#diff_img').attr('src', data.comparisons.url + data.comparisons.suffixes[0]);
-		$('#threshold_img').attr('src', data.comparisons.url + data.comparisons.suffixes[1]);
-		$('#contours_img').attr('src', data.comparisons.url + data.comparisons.suffixes[2]);
+		addImageToView(data.screenshot.url, 'flex-first');
+		if( data.comparisons ) {
+			$('#title').html('Auto QA:');
+			addImageToView(data.comparisons.url + data.comparisons.suffixes[2]);
+			addImageToView(data.uploaded_file.url, 'flex-last');
+		} else {
+			$('#title').html('Screenshots:');
+			$('#now_viewing').html('Download the image and save for a later QA');
+		}
 		var options = {
 			title: false,
 			tooltip: false

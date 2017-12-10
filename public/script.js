@@ -17,7 +17,7 @@
 		if (isAddFileStep) {
 			stepManager.jumpTo(1);
 			var encodedUrl = urlWithoutFirstSlash.substring(('file/').length);
-			$('#website_address').val(decodeURIComponent(encodedUrl));
+			$('#website_address').val(decodeURIComponent(decodeURIComponent(encodedUrl)));
 			return;
 		}
 		var isOnlyScreenshot = urlWithoutFirstSlash.indexOf('screenshot/') === 0;
@@ -155,7 +155,7 @@
 		},
 		// Get the comparison Image
 		function() {
-			history.pushState({}, "Add a File to compare", '/file/' + encodeURIComponent($('#website_address').val()));
+			history.pushState({}, "Add a File to compare", '/file/' + encodeURIComponent(encodeURIComponent($('#website_address').val())));
 		},
 		// Loading Request
 		function() {

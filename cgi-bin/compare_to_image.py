@@ -7,7 +7,6 @@ import hashlib
 import shutil
 import os
 import cv2
-import MySQLdb
 import datetime
 from json import JSONEncoder
 

@@ -59,6 +59,13 @@ else:
             'url': 'No File to upload'
         }
 
+if form.has_key('screenshot_url'):
+    uploaded_file_path = form['screenshot_url'].value;
+    os.symlink('../' + uploaded_file_path, os.path.join('../uploads', file_date_prefix + 'upload.png'))
+    json_return_obj['uploaded_file'] = {
+        'status': 'Success',
+        'url': '/' + uploaded_file_path
+    }
 
 if form.has_key('website_address'):
     web_url = form["website_address"].value

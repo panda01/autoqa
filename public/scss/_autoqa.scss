@@ -77,10 +77,17 @@ $title_row_height: 75px;
 			border-color: red !important;
 		}
 	}
+	label {
+		h3 {
+			display: flex;
+			small {
+				font-size: 0.4em;
+				color: red;
+			}
+		}
+	}
 }
 
-#loading_page {
-}
 #comparison_page {
 	justify-content: center;
 	flex-wrap: wrap;

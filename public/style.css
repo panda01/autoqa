@@ -3188,29 +3188,36 @@ input[type="button"].btn-block {
 /* line 76, scss/_autoqa.scss */
 .form .form-control.has_error {
   border-color: red !important; }
+/* line 81, scss/_autoqa.scss */
+.form label h3 {
+  display: flex; }
+  /* line 83, scss/_autoqa.scss */
+  .form label h3 small {
+    font-size: 0.4em;
+    color: red; }
 
-/* line 84, scss/_autoqa.scss */
+/* line 91, scss/_autoqa.scss */
 #comparison_page {
   justify-content: center;
   flex-wrap: wrap; }
-  /* line 87, scss/_autoqa.scss */
+  /* line 94, scss/_autoqa.scss */
   #comparison_page .sub_title {
     display: flex; }
-  /* line 90, scss/_autoqa.scss */
+  /* line 97, scss/_autoqa.scss */
   #comparison_page > .row {
     height: auto; }
-  /* line 93, scss/_autoqa.scss */
+  /* line 100, scss/_autoqa.scss */
   #comparison_page .title_row {
     height: 75px; }
-  /* line 96, scss/_autoqa.scss */
+  /* line 103, scss/_autoqa.scss */
   #comparison_page .content_row {
     height: calc(100vh - 75px); }
 
-/* line 100, scss/_autoqa.scss */
+/* line 107, scss/_autoqa.scss */
 #multi_view {
   height: 100%; }
 
-/* line 103, scss/_autoqa.scss */
+/* line 110, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;

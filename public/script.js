@@ -5,6 +5,9 @@
 		}
 		return obj1;
 	}
+	function doubleEncodeUrl (url) { return encodeURIComponent(encodeURIComponent(url)); }
+	function doubleDecodeUrl (url) { return decodeURIComponent(decodeURIComponent(url)); }
+	var reserverdUrls = ['screenshot', 'file'];
 	function loadSubURL(url) {
 		var whole_path = document.location.pathname;
 		var isFirstStep = whole_path === '/';
@@ -17,11 +20,21 @@
 		if (isAddFileStep) {
 			stepManager.jumpTo(1);
 			var encodedUrl = urlWithoutFirstSlash.substring(('file/').length);
-			$('#website_address').val(decodeURIComponent(decodeURIComponent(encodedUrl)));
+			$('#website_address').val(doubleDecodeUrl(encodedUrl));
 			return;
 		}
+		var isCheckScreenshot = urlWithoutFirstSlash.indexOf('check/') === 0;
+		if (isCheckScreenshot) {
+		}
+		// Must be looking at a screenshot, or qa comparions
 		var isOnlyScreenshot = urlWithoutFirstSlash.indexOf('screenshot/') === 0;
-		var file_prefix = whole_path.substring(4);
+		var isQaView = urlWithoutFirstSlash.indexOf('qa/') === 0;
+		if (!isQaView && !isOnlyScreenshot) {
+			stepManager.jumpTo(0, true);
+			return;
+		}
+
+		var file_prefix = urlWithoutFirstSlash.substring(('qa/').length);
 		if (isOnlyScreenshot) {
 			file_prefix = urlWithoutFirstSlash.substring(('screenshot/').length);
 		}
@@ -30,7 +43,8 @@
 				url: '/uploads/' + file_prefix + 'screenshot.png'
 			}
 		};
-		if (!isOnlyScreenshot) {
+
+		if (isQaView) {
 			var restOfFakeObj = {
 				uploaded_file: {
 					'status': 'Success',
@@ -65,9 +79,12 @@
 			$('#now_viewing').html('Download the image and save for a later QA');
 		}
 	}
-	function makeCompareRequest(successFn) {
+	function makeCompareRequest(extraData) {
 		var files_list = $('#comparison_image')[0].files;
 		var form_data = new FormData();
+		$.each(extraData, function(key, val) {
+			form_data.append(key, val);
+		});
 		$.each(files_list, function(key, val) {
 			form_data.append('comparison_image', val, val.name);
 		});
@@ -133,7 +150,11 @@
 		imgObjToAdd.onload = function() {
 			$('#img_wrap').append(this);
 			var downloadLinkText = 'Download ' + imgTitle;
+			var compareLinkText = 'Compare ' + imgTitle + ' to another url &raquo;';
 			$('#download_links_wrap').append('<div><a target="_blank" href="' + url + '?view=download">' + downloadLinkText + '</a></div>');
+			if( imgTitle !== 'Diff') {
+				$('#compare_links_wrap').append('<div><a href="/check/' + doubleEncodeUrl(url) + '">' + compareLinkText + '</a></div>');
+			}
 		};
 		imgObjToAdd.onerror = function(a, b, c) {
 			alert('image couldn\'t be found, maybe just start over again?');
@@ -155,11 +176,24 @@
 		},
 		// Get the comparison Image
 		function() {
-			history.pushState({}, "Add a File to compare", '/file/' + encodeURIComponent(encodeURIComponent($('#website_address').val())));
+			var fullPath = document.location.pathname
+			var isCheckScreenshot = fullPath.indexOf('/check/') === 0;
+			if (isCheckScreenshot) {
+				stepManager.jumpTo(2, true);
+				return;
+			}
+
+			history.pushState({}, "Add a File to compare", '/file/' + doubleEncodeUrl($('#website_address').val()));
 		},
 		// Loading Request
 		function() {
-			makeCompareRequest();
+			var fullPath = document.location.pathname
+			var isCheckScreenshot = fullPath.indexOf('/check/') === 0;
+			var fakeData = {};
+			if (isCheckScreenshot) {
+				fakeData['screenshot_url'] = doubleDecodeUrl(fullPath.substring(('/check/').length)).substring(1);
+			}
+			makeCompareRequest(fakeData);
 		},
 		// Show the result
 		initComparisonPage
@@ -235,7 +269,10 @@
 		return {
 			next: protectedNext,
 			prev: prev,
-			jumpTo: function(whichIdx) {
+			jumpTo: function(whichIdx, fireOnEnter) {
+				if(fireOnEnter === true) {
+					onEnterStep[whichIdx]();
+				}
 				var safeIdx = whichIdx % $steps.length;
 				_loadCurrStep(safeIdx);
 			}

@@ -24,8 +24,8 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
     # setup some options
     if( driver == 'chrome' ):
         cOptions = webdriver.chrome.options.Options()
-        cOptions.add_argument("--disable-infobars")
-        webDriver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+        cOptions.add_argument("--disable-infobars --no-sandbox")
+        webDriver = webdriver.Chrome("/usr/local/bin/chromedriver", chrome_options=cOptions)
     elif( driver == 'firefox' ):
         fp = FirefoxProfile()
         capabilities = DesiredCapabilities.firefox()

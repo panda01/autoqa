@@ -3128,27 +3128,27 @@ input[type="button"].btn-block {
     left: 290px; }
   100% {
     left: -140px; } }
-/* line 39, scss/_autoqa.scss */
+/* line 40, scss/_autoqa.scss */
 #loading_page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; }
-  /* line 44, scss/_autoqa.scss */
+  /* line 45, scss/_autoqa.scss */
   #loading_page .maintext {
     margin-bottom: 10px; }
-  /* line 47, scss/_autoqa.scss */
+  /* line 48, scss/_autoqa.scss */
   #loading_page .subtext {
     text-align: center;
     margin-top: 10px; }
 
-/* line 52, scss/_autoqa.scss */
+/* line 53, scss/_autoqa.scss */
 #loader {
   height: 3px;
   width: 300px;
   overflow: hidden;
   position: relative; }
-  /* line 57, scss/_autoqa.scss */
+  /* line 58, scss/_autoqa.scss */
   #loader .bar {
     background-color: #000;
     height: 100%;
@@ -3159,7 +3159,7 @@ input[type="button"].btn-block {
     animation-duration: 3s;
     animation-iteration-count: infinite; }
 
-/* line 68, scss/_autoqa.scss */
+/* line 69, scss/_autoqa.scss */
 .container-fluid {
   position: fixed;
   top: 0;
@@ -3180,44 +3180,52 @@ input[type="button"].btn-block {
       width: 100%; }
   /* line 23, scss/_autoqa.scss */
   .container-fluid .btn {
-    margin-top: 20px; }
-  /* line 70, scss/_autoqa.scss */
+    margin-top: 20px;
+    cursor: pointer; }
+  /* line 71, scss/_autoqa.scss */
   .container-fluid > .row {
     height: 100%; }
 
-/* line 76, scss/_autoqa.scss */
+/* line 77, scss/_autoqa.scss */
 .form .form-control.has_error {
   border-color: red !important; }
-/* line 81, scss/_autoqa.scss */
+/* line 82, scss/_autoqa.scss */
 .form label h3 {
   display: flex; }
-  /* line 83, scss/_autoqa.scss */
+  /* line 84, scss/_autoqa.scss */
   .form label h3 small {
     font-size: 0.4em;
     color: red; }
+/* line 90, scss/_autoqa.scss */
+.form .instructions {
+  margin-top: 20px; }
 
-/* line 91, scss/_autoqa.scss */
+/* line 95, scss/_autoqa.scss */
+button[data-step-action="next"] {
+  float: right; }
+
+/* line 99, scss/_autoqa.scss */
 #comparison_page {
   justify-content: center;
   flex-wrap: wrap; }
-  /* line 94, scss/_autoqa.scss */
+  /* line 102, scss/_autoqa.scss */
   #comparison_page .sub_title {
     display: flex; }
-  /* line 97, scss/_autoqa.scss */
+  /* line 105, scss/_autoqa.scss */
   #comparison_page > .row {
     height: auto; }
-  /* line 100, scss/_autoqa.scss */
+  /* line 108, scss/_autoqa.scss */
   #comparison_page .title_row {
     height: 75px; }
-  /* line 103, scss/_autoqa.scss */
+  /* line 111, scss/_autoqa.scss */
   #comparison_page .content_row {
     height: calc(100vh - 75px); }
 
-/* line 107, scss/_autoqa.scss */
+/* line 115, scss/_autoqa.scss */
 #multi_view {
   height: 100%; }
 
-/* line 110, scss/_autoqa.scss */
+/* line 118, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;

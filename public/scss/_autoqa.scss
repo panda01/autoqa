@@ -22,6 +22,7 @@
 	}
 	.btn {
 		margin-top: 20px;
+		cursor: pointer;
 	}
 }
 @keyframes loading {
@@ -86,6 +87,13 @@ $title_row_height: 75px;
 			}
 		}
 	}
+	.instructions {
+		margin-top: 20px;
+	}
+}
+
+button[data-step-action="next"] {
+	float: right;
 }
 
 #comparison_page {

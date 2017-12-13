@@ -10,10 +10,13 @@
 		<form class="container-fluid form" data-step="0">
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
-					<label for="website_address"><h3>Enter an URL:<small>* required</small></h3></label>
+					<label for="website_address"><h3>Enter an URL to screenshot:<small>* required</small></h3></label>
 					<input type="text" class="form-control" name="website_address" id="website_address" />
+					<div class="instructions">
+						Choose a url that will be photographed, and will be used as the base for pixel perfect QA comparisons
+					</div>
 					<button type="submit" class="btn btn-primary" data-step-action="next">
-						Next
+						Next &raquo;
 					</button>
 				</div>
 			</div>
@@ -23,11 +26,14 @@
 				<div class="form-group col-lg-8">
 					<label for="comparison_image"><h3>Choose an Image to compare</h3></label>
 					<input type="file" class="form-control" name="comparison_image" id="comparison_image" />
+					<div class="instructions">
+						Upload an image, like the web designs, or previous AutoQA screenshot, or just continue with only a screenshot of the previously entered webpage
+					</div>
 					<button class="btn btn-primary" data-step-action="prev">
-						Back
+						&laquo; Back
 					</button>
 					<button type="submit" class="btn btn-primary" data-step-action="next">
-						Check Website against a file, or just take a screenshot &raquo;
+						Next &raquo;
 					</button>
 				</div>
 			</div>

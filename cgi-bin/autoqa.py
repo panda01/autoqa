@@ -16,9 +16,8 @@ from pyvirtualdisplay import Display
 
 
 # https://seleniumpythonqa.blogspot.com/2015/08/generate-full-page-screenshot-in-chrome.html
-def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
-    viewportWidth = 1280
-    viewportHeight = 800
+def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWidth=1280, viewportHeight=800, loadingWait=0):
+
     display = Display(visible=0, size=(viewportWidth, viewportHeight))
     display.start()
     # setup some options
@@ -34,13 +33,15 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome"):
 
         display = Display(visible=0, size=(1920, 1080)).start()
         webDriver = webdriver.Firefox()
-    # webDriver.set_window_size(viewportWidth, viewportHeight)
+    webDriver.set_window_size(viewportWidth, viewportHeight)
     actual_height = webDriver.execute_script('return window.innerHeight')
     height_diff = viewportHeight - actual_height
-    # if height_diff > 0:
-        # webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
+    if height_diff > 0:
+        webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
     webDriver.get(url)
 
+    if(loadingWait > 0):
+        time.sleep(loadingWait)
 
     # pause all of the videos
     webDriver.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");

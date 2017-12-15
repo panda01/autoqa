@@ -67,10 +67,20 @@ if form.has_key('screenshot_url'):
         'url': '/' + uploaded_file_path
     }
 
+
+
+
 if form.has_key('website_address'):
     web_url = form["website_address"].value
     shorter_url = web_url.replace('http://', '')
-    screenshot_img = autoqa.getPageScreenshot(web_url)
+    screenshot_options = {}
+    if form.has_key('viewport_width'):
+        screenshot_options['viewportWidth'] = int(form['viewport_width'].value)
+    if form.has_key('viewport_height'):
+        screenshot_options['viewportHeight'] = int(form['viewport_height'].value)
+    if form.has_key('wait_for_load') and int(form['wait_for_load'].value) is 1:
+        screenshot_options['loadingWait'] = 15
+    screenshot_img = autoqa.getPageScreenshot(web_url, **screenshot_options)
     screenshot_filepath = os.path.join('uploads/', file_date_prefix + 'screenshot.png')
 
     screenshot_img.save('../' + screenshot_filepath)

@@ -13,11 +13,10 @@
 	&.next {
 	}
 	&.current {
-		display: flex;
+		display: block;
 		opacity: 100;
 		z-index: 1;
 		.row {
-			width: 100%;
 		}
 	}
 	.btn {
@@ -88,7 +87,7 @@ $title_row_height: 75px;
 		}
 	}
 	.instructions {
-		margin-top: 20px;
+		margin-bottom: 20px;
 	}
 }
 

@@ -11,9 +11,42 @@
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
 					<label for="website_address"><h3>Enter an URL to screenshot:<small>* required</small></h3></label>
+					<div class="instructions"> Choose a url that will be photographed, and will be used as the base for pixel perfect QA comparisons </div>
 					<input type="text" class="form-control" name="website_address" id="website_address" />
-					<div class="instructions">
-						Choose a url that will be photographed, and will be used as the base for pixel perfect QA comparisons
+					<div class="options">
+						<div>Dimensions:</div>
+						<div class="row">
+							<div class="col">
+								<label for="viewport_width">
+									Width:
+								</label>
+								<input type="number"
+									placeholder="1280px"
+									class="form-control"
+									id="viewport_width"
+									name="viewport_width" />
+							</div>
+							<div class="col">
+								<label for="viewport_height">
+									Height:
+								</label>
+								<input type="number"
+									placeholder="800px"
+									class="form-control"
+									id="viewport_height"
+									name="viewport_height" />
+							</div>
+						</div>
+						<div class="form-check">
+							<label for="wait_for_load">
+								<input
+									type="checkbox"
+									id="wait_for_load"
+									name="wait_for_load" />
+								Check this box if you have a
+								loading screen
+							</label>
+						</div>
 					</div>
 					<button type="submit" class="btn btn-primary" data-step-action="next">
 						Next &raquo;

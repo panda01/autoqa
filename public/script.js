@@ -20,6 +20,14 @@
 		if (isAddFileStep) {
 			stepManager.jumpTo(1);
 			var encodedUrl = urlWithoutFirstSlash.substring(('file/').length);
+			var queryObj = makeObjFromQueryString(document.location.search);
+			$.each(queryObj, function(key, val) {
+				if(key === 'wait_for_load') {
+					$('#' + key).prop('checked', (val === 'true'));
+				} else {
+					$('#' + key).val(val);
+				}
+			});
 			$('#website_address').val(doubleDecodeUrl(encodedUrl));
 			return;
 		}
@@ -79,6 +87,23 @@
 			$('#now_viewing').html('Download the image and save for a later QA');
 		}
 	}
+	function cleanNumber(num) {
+		var isEmptyStr = num === '';
+		if(isEmptyStr) {
+			return undefined;
+		}
+		var lowerLimit = 250;
+		var isNumTooSmall = num < lowerLimit;
+		if(isNumTooSmall) {
+			return lowerLimit;
+		}
+		var upperLimit = 2160;
+		var isNumTooBig = num > upperLimit
+		if(isNumTooBig) {
+			return upperLimit;
+		}
+		return Math.round(num);
+	}
 	function makeCompareRequest(extraData) {
 		var files_list = $('#comparison_image')[0].files;
 		var form_data = new FormData();
@@ -89,6 +114,16 @@
 			form_data.append('comparison_image', val, val.name);
 		});
 		form_data.append('website_address', $('#website_address').val());
+		var viewport_width = cleanNumber($('#viewport_width').val());
+		if(viewport_width) {
+			form_data.append('viewport_width', viewport_width);
+		}
+		var viewport_height = cleanNumber($('#viewport_height').val());
+		if(viewport_height) {
+			form_data.append('viewport_height', viewport_height);
+		}
+		var wait_checkbox_checked = $('#wait_for_load').is(':checked') ? 1 : 0;
+		form_data.append('wait_for_load', wait_checkbox_checked);
 		$.ajax({
 			url: '/cgi-bin/compare_to_image.py',
 			type: 'POST',
@@ -165,6 +200,30 @@
 		}
 		imgObjToAdd.className = 'col-md-4 ' + additionalClasses;
 	}
+	function makeObjFromQueryString(queryStr) {
+		var cleanQuery = queryStr.substring(('?').length)
+		var queryArr = cleanQuery.split('&');
+		return queryArr.reduce(function(accumulator, curr) {
+			var keyValArr = curr.split('=');
+			var key = keyValArr[0];
+			var val = doubleDecodeUrl(keyValArr[1]);
+			accumulator[key] = val;
+			return accumulator;
+		}, {});
+	}
+	function makeGetURLParamString(obj) {
+		var retString = '?';
+		var keyValArr = [];
+		$.each(obj, function(key, val) {
+			if(val !== undefined) {
+				keyValArr.push(key + '=' + doubleEncodeUrl(val));
+			}
+		});
+		if(keyValArr.length === 0) {
+			return '';
+		}
+		return retString + keyValArr.join('&');
+	}
 	var onEnterStep = [
 		// Get the URL
 		function() {
@@ -183,7 +242,13 @@
 				return;
 			}
 
-			history.pushState({}, "Add a File to compare", '/file/' + doubleEncodeUrl($('#website_address').val()));
+
+			var getParamObj = {
+				viewport_width: cleanNumber($('#viewport_width').val()),
+				viewport_height: cleanNumber($('#viewport_height').val()),
+				wait_for_load: $('#wait_for_load').is(':checked')
+			};
+			history.pushState({}, "Add a File to compare", '/file/' + doubleEncodeUrl($('#website_address').val()) + makeGetURLParamString(getParamObj));
 		},
 		// Loading Request
 		function() {

@@ -285,6 +285,14 @@
 				$inputEl.removeClass('has_error');
 			}
 		});
+		$('body').on('keydown', function(evt) {
+			var keyCode = evt.keyCode;
+			if(keyCode === 13) {
+				protectedNext();
+				evt.preventDefault();
+				evt.stopPropagation();
+			}
+		});
 
 		function next() {
 			currStep++;

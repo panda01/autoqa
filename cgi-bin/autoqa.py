@@ -30,14 +30,15 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWid
         capabilities = DesiredCapabilities.firefox()
         capabilities.setCapability(FirefoxDriver.PROFILE, fp)
 
-
         display = Display(visible=0, size=(1920, 1080)).start()
         webDriver = webdriver.Firefox()
+
     webDriver.set_window_size(viewportWidth, viewportHeight)
     actual_height = webDriver.execute_script('return window.innerHeight')
     height_diff = viewportHeight - actual_height
     if height_diff > 0:
         webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
+
     webDriver.get(url)
 
     if(loadingWait > 0):

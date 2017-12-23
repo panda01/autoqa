@@ -12,10 +12,6 @@ from json import JSONEncoder
 
 cgitb.enable(display=1)
 
-# HTML page
-print "Content-type: application/json\n\n"
-
-
 json_return_obj = {};
 
 #init some vars
@@ -106,4 +102,6 @@ if uploaded_file_path and screenshot_filepath:
 
 json_return_obj['hash'] = file_date_prefix
 
+# JSON page
+print "Content-type: application/json\n\n"
 print JSONEncoder().encode(json_return_obj)

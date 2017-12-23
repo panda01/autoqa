@@ -10,15 +10,14 @@
 		<form class="container-fluid form" data-step="0">
 			<div class="row justify-content-center align-items-center">
 				<div class="form-group col-lg-8">
-					<label for="website_address"><h3>Enter an URL to screenshot:<small>* required</small></h3></label>
-					<div class="instructions"> Choose a url that will be photographed, and will be used as the base for pixel perfect QA comparisons </div>
+					<label for="website_address"><h5>Screenshot URL:<small>* required</small></h5></label>
 					<input type="text" class="form-control" name="website_address" id="website_address" />
 					<div class="options">
-						<div>Dimensions:</div>
+						<h5>Mock Screen Dimensions:</h5>
 						<div class="row">
 							<div class="col">
 								<label for="viewport_width">
-									Width:
+									<h6>Width:</h6>
 								</label>
 								<input type="number"
 									placeholder="1280px"
@@ -28,7 +27,7 @@
 							</div>
 							<div class="col">
 								<label for="viewport_height">
-									Height:
+									<h6>Height:</h6>
 								</label>
 								<input type="number"
 									placeholder="800px"
@@ -48,30 +47,15 @@
 							</label>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary" data-step-action="next">
-						Next &raquo;
-					</button>
-				</div>
-			</div>
-		</form>
-		<form class="container-fluid form" data-step="1">
-			<div class="row justify-content-center align-items-center">
-				<div class="form-group col-lg-8">
-					<label for="comparison_image"><h3>Choose an Image to compare</h3></label>
+					<label for="comparison_image"><h5>Comparison Image</h5></label>
 					<input type="file" class="form-control" name="comparison_image" id="comparison_image" />
-					<div class="instructions">
-						Upload an image, like the web designs, or previous AutoQA screenshot, or just continue with only a screenshot of the previously entered webpage
-					</div>
-					<button class="btn btn-primary" data-step-action="prev">
-						&laquo; Back
-					</button>
 					<button type="submit" class="btn btn-primary" data-step-action="next">
 						Next &raquo;
 					</button>
 				</div>
 			</div>
 		</form>
-		<div id="loading_page" class="container-fluid" data-step="2">
+		<div id="loading_page" class="container-fluid" data-step="1">
 			<h1 class="maintext">Loading...</h1>
 			<div id="loader"><div class="bar"></div></div>
 			<p class="subtext">
@@ -80,7 +64,7 @@
 				<small>(Typically takes ~1 minute)</small>
 			</p>
 		</div>
-		<div id="comparison_page" class="container-fluid" data-step="3">
+		<div id="comparison_page" class="container-fluid" data-step="2">
 			<div class="col-md-12">
 				<div class="row title_row">
 					<h1 id="title" class="col-md-4"></h1>

@@ -3183,46 +3183,53 @@ input[type="button"].btn-block {
   .container-fluid > .row {
     height: 100%; }
 
-/* line 76, scss/_autoqa.scss */
+/* line 74, scss/_autoqa.scss */
+.options {
+  margin-top: 10px; }
+  /* line 76, scss/_autoqa.scss */
+  .options .form-check {
+    margin-top: 10px; }
+
+/* line 82, scss/_autoqa.scss */
 .form .form-control.has_error {
   border-color: red !important; }
-/* line 81, scss/_autoqa.scss */
-.form label h3 {
+/* line 87, scss/_autoqa.scss */
+.form label > h1, .form label > h2, .form label > h3, .form label > h4, .form label > h5, .form label > h6 {
   display: flex; }
-  /* line 83, scss/_autoqa.scss */
-  .form label h3 small {
+  /* line 89, scss/_autoqa.scss */
+  .form label > h1 > small, .form label > h2 > small, .form label > h3 > small, .form label > h4 > small, .form label > h5 > small, .form label > h6 > small {
     font-size: 0.4em;
     color: red; }
-/* line 89, scss/_autoqa.scss */
+/* line 95, scss/_autoqa.scss */
 .form .instructions {
   margin-bottom: 20px; }
 
-/* line 94, scss/_autoqa.scss */
+/* line 100, scss/_autoqa.scss */
 button[data-step-action="next"] {
   float: right; }
 
-/* line 98, scss/_autoqa.scss */
+/* line 104, scss/_autoqa.scss */
 #comparison_page {
   justify-content: center;
   flex-wrap: wrap; }
-  /* line 101, scss/_autoqa.scss */
+  /* line 107, scss/_autoqa.scss */
   #comparison_page .sub_title {
     display: flex; }
-  /* line 104, scss/_autoqa.scss */
+  /* line 110, scss/_autoqa.scss */
   #comparison_page > .row {
     height: auto; }
-  /* line 107, scss/_autoqa.scss */
+  /* line 113, scss/_autoqa.scss */
   #comparison_page .title_row {
     height: 75px; }
-  /* line 110, scss/_autoqa.scss */
+  /* line 116, scss/_autoqa.scss */
   #comparison_page .content_row {
     height: calc(100vh - 75px); }
 
-/* line 114, scss/_autoqa.scss */
+/* line 120, scss/_autoqa.scss */
 #multi_view {
   height: 100%; }
 
-/* line 117, scss/_autoqa.scss */
+/* line 123, scss/_autoqa.scss */
 #img_wrap {
   height: 100%;
   display: flex;

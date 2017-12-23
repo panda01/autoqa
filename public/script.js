@@ -68,7 +68,7 @@
 		console.log(fake_ajax_data_obj);
 
 		// Jump to the step and load the images
-		stepManager.jumpTo(3);
+		stepManager.jumpTo(2);
 		initComparisonPage(fake_ajax_data_obj);
 	}
 	// While on the page be sure to capture changes in the url

@@ -71,16 +71,22 @@ $title_row_height: 75px;
 		height: 100%;
 	}
 }
+.options {
+	margin-top: 10px;
+	.form-check {
+		margin-top: 10px;
+	}
+}
 .form {
 	.form-control {
 		&.has_error {
 			border-color: red !important;
 		}
 	}
-	label {
-		h3 {
+	label > {
+		h1, h2, h3, h4, h5, h6 {
 			display: flex;
-			small {
+			> small {
 				font-size: 0.4em;
 				color: red;
 			}

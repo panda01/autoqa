@@ -48,6 +48,7 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWid
 
     screenshot_image = fullpageScreenshot(webDriver, image_name)
 
+    time.sleep(5)
     webDriver.quit()
 
     if screenshot_image:

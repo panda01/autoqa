@@ -25,13 +25,13 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWid
         cOptions = webdriver.chrome.options.Options()
         cOptions.add_argument("--disable-infobars --no-sandbox")
         webDriver = webdriver.Chrome("/usr/local/bin/chromedriver", chrome_options=cOptions)
+
     elif( driver == 'firefox' ):
         fp = FirefoxProfile()
         capabilities = DesiredCapabilities.firefox()
         capabilities.setCapability(FirefoxDriver.PROFILE, fp)
-
-        display = Display(visible=0, size=(1920, 1080)).start()
         webDriver = webdriver.Firefox()
+
 
     webDriver.set_window_size(viewportWidth, viewportHeight)
     actual_height = webDriver.execute_script('return window.innerHeight')
@@ -39,7 +39,11 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWid
     if height_diff > 0:
         webDriver.set_window_size(viewportWidth, viewportHeight + height_diff)
 
-    webDriver.get(url)
+    try:
+        webDriver.get(url)
+    except: 
+        print "Content-type: text/html\n\n"
+        print "Something went wrong with the request"
 
     if(loadingWait > 0):
         time.sleep(loadingWait)

@@ -49,7 +49,7 @@ def getPageScreenshot(url, image_name="screenshot", driver="chrome", viewportWid
         time.sleep(loadingWait)
 
     # pause all of the videos
-    webDriver.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
+    # webDriver.execute_script("document.querySelectorAll('video').forEach(function(el) {el.pause();})");
 
     screenshot_image = fullpageScreenshot(webDriver, image_name)
 
